@@ -84,7 +84,7 @@ wwclient.on("message", async (message) => {
     }
 
     if (message.body.toString().toLowerCase() === ",mame") {
-        return wwclient.sendMessage(message.from, `${(await message.getChat()).name}`)
+        return 
     }
 
     if (message.body.toString().toLowerCase() === ",del") {
