@@ -4,6 +4,7 @@ async function changeProfilePicture(wwclient, message) {
 
     let chat = await message.getChat()
     let contact = await message.getContact()
+    let messageSplit;
 
     if (!chat.isGroup) {
         if (contact.number != process.env.PHONE) {
@@ -11,14 +12,17 @@ async function changeProfilePicture(wwclient, message) {
         }
     }
 
-    if (message.hasQuotedMsg) {
-        if ((message.hasQuotedMsg).hasMedia) {
+    // if (message.hasQuotedMsg) {
+    //     if ((message.hasQuotedMsg).hasMedia) {
 
-        }
+    //     }
+    // }
+    if (message.links.length == 0) {
+        messageSplit = message.body.split(" ")
+    } else {
+        
     }
-
     // if 
-    let messageSplit = message.body.split(" ")
     if (messageSplit.length !== 1) {
         try {
             url = await fetch(messageSplit[1]);
