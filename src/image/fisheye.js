@@ -1,18 +1,22 @@
 import { Jimp } from "jimp";
-import { MessageMedia } from "whatsapp-web.js";
+import whatsapp from "whatsapp-web.js";
+
+const {
+    MessageMedia
+} = whatsapp
 
 async function EyeFish(wwclient, message) {
     let chat = await message.getChat()
     let mentions = await message.getMentions()
-    let messageSliced, url, name;
+    let link, url, name;
 
     if (mentions.length == 0) {
-        messageSliced = message.body.sliced(" ")
-        if (messageSliced.length == 1 || messageSliced.length > 2) {
+        link = message.links
+        if (link.length == 0) {
             return 
         } else {
-            url = await MessageMedia.fromUrl(url)
-            name = "undo"
+            url = link[0].link
+            name = "fish"
         }
     } else {
         url = await mentions[0].getProfilePicUrl()
@@ -21,9 +25,9 @@ async function EyeFish(wwclient, message) {
 
     const Image = await Jimp.read(url);
     Image.fisheye();
-    await Image.write(`temp/${name}.png`)
+    await Image.write(`src/image/temp/${name}.png`)
 
-    return message.reply(MessageMedia.fromFilePath(`temp/${name}.png`))
+    return message.reply(MessageMedia.fromFilePath(`src/image/temp/${name}.png`))
 }
 
 export default EyeFish

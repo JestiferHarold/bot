@@ -4,8 +4,9 @@ async function archiveChat(wwclient, message) {
     if (chat.archived) {
         return
     }
-
-    return chat.archive()
+    
+    chat.archive()
+    return chat.react("👍")
 }
 
 export default archiveChat

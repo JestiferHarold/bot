@@ -46,7 +46,7 @@ async function textReGenerator(message) {
         quotedMessage = message
     }
 
-    let response = (await gen.files.
+    // let response = (await gen.files.GEMINI_API_KEY
 
-    ))
+    // ))   
 }
