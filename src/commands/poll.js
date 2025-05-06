@@ -1,4 +1,8 @@
-import { Poll } from "whatsapp-web.js"
+import whatsapp from "whatsapp-web.js"
+
+const {
+    Poll
+} = whatsapp
 
 function createPoll(wwclient, message){
     let messageSliced = message.body.split("^")

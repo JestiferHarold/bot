@@ -16,6 +16,21 @@ const { default: invert } = require('./src/image/invert');
 const { default: pixelate } = require('./src/image/pixelate');
 const { default: sipia } = require('./src/image/sipia');
 const { default: archiveChat } = require('./src/client/archive');
+const { default: destroyClient } = require('./src/client/destroy');
+const { default: clearMessagesFromClient } = require('./src/commands/clear');
+const { default: setGroupChatDescription } = require('./src/commands/description');
+const { default: forwarded } = require('./src/commands/forwarded');
+const { default: getInviteCode } = require('./src/commands/invitecode');
+const { default: leaveChat } = require('./src/commands/leave');
+const { default: muteChat } = require('./src/commands/mute');
+const { default: getChatName } = require('./src/commands/name');
+const { RETRY_DELAY, UnsupportedOperation } = require('puppeteer');
+const { default: pin } = require('./src/commands/pin');
+const { default: unpin } = require('./src/commands/unpin');
+const { EmulatedState } = require('puppeteer');
+const { default: createPoll } = require('./src/commands/poll');
+const { default: deleteProfilePicture } = require('./src/commands/profiledel');
+const { default: sendSticker } = require('./src/commands/sticker');
 
 
 const wwclient = new Client(
@@ -123,12 +138,66 @@ wwclient.on("message", async (message) => {
         return archiveChat(wwclient, message)
     }
 
+    if (message.body.toString().toLowerCase().slice(0, 7) == ",break") {
+        return destroyClient(wwclient, message)
+    }
+
+    if (message.body.toString().toLowerCase().slice(0, 7) == ",clear") {
+        return clearMessagesFromClient(wwclient, message)
+    }
+
+    if (message.body.toString().toLowerCase().slice(0, 4) == ",des") {
+        return setGroupChatDescription(wwclient, message)
+    }
+
+    if (message.body.toString().toLowerCase().slice(0,2) == ",f") {
+        return forwarded(message)
+    }
+
+    if (message.body.toString().toLowerCase().slice(0, 3) == ",gi") {
+        return getInviteCode(message)
+    }
+
+    if (message.body.toString().toLowerCase().slice(0, 7) == ",leave") {
+        return leaveChat(wwclient, message)
+    }
+
+    if (message.body.toString().toLowerCase().slice(0, 6) == ",mute") {
+        return muteChat(wwclient, message)
+    }
+
+    if (message.body.toString().toLowerCase().slice(0, 8) == ",unmute") {
+        return unmuteChat(wwclient, message)
+    }
+
+    if (message.body.toString().toLowerCase().slice(0, 5) == ",pin") {
+        return pin(message)
+    }
+
+    if (message.body.toString().toLowerCase().slice(0, 7) == ",unmute") {
+        return unpin(message)
+    }
+
+    if (message.body.toString().toLowerCase().slice(0, 2) == ",p") {
+        return createPoll(wwclient, message)
+    }
+
+    if (message.body.toString().toLowerCase().slice(0, 3) == ",pd") {
+        return deleteProfilePicture(wwclient, message)
+    }
+
+    if (message.body.toString().toLowerCase().slice(0, 2) == ",s") {
+        return sendSticker(wwclient, message)
+    }
+ 
+    if (message.body.toString().toLowerCase().slice(0, ))
+
     if (message.body.toString().toLowerCase() === ",adminsonlym") {
         // return changeMessageSettings(wwclient, message)
     }
 
-    if (message.body.toString().toLowerCase() === ",revoke") {
-    //    return revokeGroupInvites(wwclient, message)
+    if (message.body.toString().toLowerCase().slice(0, 7) === ",revoke") {
+       return revokeGroupInvites(wwclient, message)
     }
 
     if (message.body.toString().toLowerCase() === ",adminsonlyi") {
@@ -139,12 +208,12 @@ wwclient.on("message", async (message) => {
         
     }
 
-    if (message.body.toString().toLowerCase() === ",refers") {
-        // return shareReferences(wwclient, message)
+    if (message.body.toString().toLowerCase().slice(0, 5) === ",refs") {
+        return shareReferences(wwclient, message)
     }
 
-    if (message.body.toString().toLowerCase() === ",mame") {
-        return 
+    if (message.body.toString().toLowerCase().slice(0, 5) === ",mame") {
+        return getChatName(wwclient, message)
     }
 
     if (message.body.toString().toLowerCase() === ",del") {
