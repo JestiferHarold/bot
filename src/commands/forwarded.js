@@ -3,7 +3,7 @@ async function forwarded(message) {
         return
     }
 
-    let quotedMessage = await message.getQuotedMsg()
+    let quotedMessage = await message.getQuotedMessage()
     
     if (quotedMessage.isForwarded) {
         let times = quotedMessage.forwardingScore

@@ -3,7 +3,9 @@
     "@google/genai": "^0.12.0",
     "@google/generative-ai": "^0.24.1",
     "dotenv": "^16.5.0",
+    "en": "^1.0.1",
     "jimp": "^1.6.0",
+    "pastebin-api": "^7.0.0",
     "puppeteer": "^24.8.0",
     "qrcode-terminal": "^0.12.0",
     "whatsapp-web.js": "^1.27.0"

@@ -1,9 +1,9 @@
 const qrcode = require('qrcode-terminal')
-const { Client, LocalAuth } = require("whatsapp-web.js");
+const { Client, LocalAuth, MessageMedia } = require("whatsapp-web.js");
 // const { default: checkSwears } = require("./src/events/swears");
 // const { default: changeMessageSettings } = require("./src/commands/adminsonlymessage");
 // const { default: revokeGroupInvites } = require("./src/commands/revokeinvite");
-// const { default: shareReferences } = require("./src/commands/references");
+const { default: shareReferences } = require("./src/commands/references");
 const { default: takeScreenshot } = require("./src/commands/screenshot");
 const { default: HiterlifyAvatar } = require('./src/image/hiter');
 const { default: circle } = require('./src/image/circle');
@@ -31,6 +31,8 @@ const { EmulatedState } = require('puppeteer');
 const { default: createPoll } = require('./src/commands/poll');
 const { default: deleteProfilePicture } = require('./src/commands/profiledel');
 const { default: sendSticker } = require('./src/commands/sticker');
+const { default: profilepicture } = require('./src/commands/profile');
+const { default: PasteBin } = require('./src/pastebin/paste');
 
 
 const wwclient = new Client(
@@ -58,7 +60,13 @@ wwclient.on('ready', () => {
 
 wwclient.initialize();
 
+// wwclient.on('message', async message => {
+//     return profilepicture(message)
+// })
+
 wwclient.on("message", (message) => {
+
+    // (await message.getQuotedMessage()).bo
 
     if (message.body.charAt(0) === "," ) {
         return
@@ -83,11 +91,16 @@ wwclient.on("message", (message) => {
     if (message.body.toString().toLowerCase() === "good job") {
         return message.react("😁");
     }
+    
 })
 
 wwclient.on("message", async (message) => {
     if (message.body.charAt(0) !== ",") {
         return
+    }
+
+    if (message.body.toString().toLowerCase().slice(0, 3) == ",pb" ) {
+        return await PasteBin(wwclient, message)
     }
 
     if (message.body.toString().toLowerCase().slice(0,5) == ",blur") {
@@ -190,7 +203,7 @@ wwclient.on("message", async (message) => {
         return sendSticker(wwclient, message)
     }
  
-    if (message.body.toString().toLowerCase().slice(0, ))
+    // if (message.body.toString().toLowerCase().slice(0, ))
 
     if (message.body.toString().toLowerCase() === ",adminsonlym") {
         // return changeMessageSettings(wwclient, message)
@@ -219,5 +232,8 @@ wwclient.on("message", async (message) => {
     if (message.body.toString().toLowerCase() === ",del") {
         return 
     }
+
+    
 }) 
+
 

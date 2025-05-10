@@ -5,7 +5,7 @@ async function sendSticker(wwclient, message) {
 
     if (!message.hasMedia){
         if (message.hasQuotedMsg) {
-            quotedMessage = await message.getQuotedMsg()
+            quotedMessage = await message.getQuotedMessage()
             if (!quotedMessage.hasMedia) {
                 return
             }
@@ -20,9 +20,9 @@ async function sendSticker(wwclient, message) {
 
     let media = await quotedMessage.downloadMedia()
 
-    return message.reply(message, undefined, {
-        "sendMessageAsSticker" : true,
-        "stickerAuthor" : contact.pushname
+    return await message.reply(media, message.from, {
+        "sendMediaAsSticker" : true,
+        "stickerAuthor" : "mizzuuuriiii"
     })
 }
 
