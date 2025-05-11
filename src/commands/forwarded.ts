@@ -1,0 +1,19 @@
+import { Message, MessageMedia } from "whatsapp-web.js";
+
+async function timesForwarded(message : Message) : Promise<void> {
+    
+    if (!message.hasQuotedMsg) {
+        return
+    }
+
+    let targetMessage : Message = await message.getQuotedMessage()
+
+    if ((targetMessage.isForwarded).valueOf()) {
+        let times = targetMessage.forwardingScore
+        message.reply(`The Message has been forwarded ${times} ${times == 1 ? "time" : "times"}`)
+    }
+
+    return
+} 
+
+export default timesForwarded
