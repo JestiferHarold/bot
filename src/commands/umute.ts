@@ -5,5 +5,5 @@ async function unmute(message : Message) : Promise<void> {
 
     return await chat.unmute()
 }
-
+    
 export default unmute

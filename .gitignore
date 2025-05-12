@@ -13,3 +13,5 @@
 .pnp.*
 .env
 /node_modules
+test.html
+test.ts
