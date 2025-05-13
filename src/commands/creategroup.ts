@@ -53,7 +53,7 @@ async function createGroupChat(wwclient : Client, message : Message) : Promise<M
         await wwclient.getChatById(group.gid).leave()
     }
 
-    //This message should be sent as a personal message to the user who used this command not in the group chat
+    //This message should be sent as a personal message to the user who invoked this function not in the group chat
 
     return await wwclient.sendMessage(message.from, "Group Created")
     
