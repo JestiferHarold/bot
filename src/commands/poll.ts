@@ -1,5 +1,10 @@
 import { Client, Message, Poll } from "whatsapp-web.js";
 
+export const Name : string = ""
+export const Command : string = ""
+export const Description : string = ""
+export const AdminOnly : boolean = true
+
 async function createPoll(wwclient : Client, message : Message) : Promise<void | Message> {
     let body : string = message.body.slice(3)
     let pollArray : Array<string> = body.split("")

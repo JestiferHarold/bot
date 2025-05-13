@@ -1,5 +1,10 @@
 import { Message, MessageMedia } from "whatsapp-web.js";
 
+export const Name : string = ""
+export const Command : string = ""
+export const Description : string = ""
+export const AdminOnly : boolean = true
+
 async function timesForwarded(message : Message) : Promise<void> {
     
     if (!message.hasQuotedMsg) {

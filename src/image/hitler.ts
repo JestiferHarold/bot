@@ -1,6 +1,11 @@
 import { Jimp } from "jimp";
 import { Chat, Client, Contact, Message, MessageMedia } from "whatsapp-web.js";
 
+export const Name : string = ""
+export const Command : string = ""
+export const Description : string = ""
+export const AdminOnly : boolean = true
+
 async function HitlerlifyAvatar(wwclient : Client, message : Message) {
     const chat : Chat = await message.getChat()
     const mentions : Array<Contact> = await message.getMentions()

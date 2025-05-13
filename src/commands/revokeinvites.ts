@@ -1,5 +1,10 @@
 import { Chat, Client, Message } from "whatsapp-web.js";
 
+export const Name : string = ""
+export const Command : string = ""
+export const Description : string = ""
+export const AdminOnly : boolean = true
+
 async function revokeGroupInvites(wwclient : Client, message : Message) : Promise<void | boolean>{
     let chat : Chat = await message.getChat()
 

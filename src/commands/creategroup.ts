@@ -1,5 +1,10 @@
 import { Chat, Client, Contact, ContactId, CreateGroupResult, GroupParticipant, Message } from "whatsapp-web.js";
 
+export const Name : string = ""
+export const Command : string = ""
+export const Description : string = ""
+export const AdminOnly : boolean = true
+
 async function createGroupChat(wwclient : Client, message : Message) : Promise<Message | void>{
     const participants : Array<Contact> | Array<GroupParticipant> | Array<ContactId> | Array<string> = await message.getMentions()
     const chat : Chat = await message.getChat()

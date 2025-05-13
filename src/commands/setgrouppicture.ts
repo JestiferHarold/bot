@@ -1,5 +1,10 @@
 import { Chat, Client, Message, MessageMedia } from "whatsapp-web.js";
 
+export const Name : string = ""
+export const Command : string = ""
+export const Description : string = ""
+export const AdminOnly : boolean = true
+
 async function setGroupPicture(wwclient : Client, message : Message) : Promise<boolean | void>{
     const chat : Chat = await message.getChat()
 

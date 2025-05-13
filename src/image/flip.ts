@@ -1,6 +1,11 @@
 import { Chat, Client, Contact, Message, MessageMedia } from "whatsapp-web.js";
 import {Jimp} from "jimp";
 
+export const Name : string = ""
+export const Command : string = ""
+export const Description : string = ""
+export const AdminOnly : boolean = true
+
 async function flip(wwclient : Client, message : Message) {
     let chat : Chat = await message.getChat()
     let mentions : Array<Contact> = await message.getMentions()
