@@ -6,7 +6,8 @@ export const Description : string = ""
 export const AdminOnly : boolean = true
 
 async function destroyClient(wwclient : Client, message : Message) : Promise<void> {
-    wwclient.sendMessage(message.from, "Client Destroyed")
+    //@ts-expect-error
+    wwclient.sendMessage(process.env.PHONE_NUMBER, "Client Destroyed")
 
     return await wwclient.destroy()
 }

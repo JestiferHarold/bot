@@ -13,7 +13,7 @@ async function susLinks(wwclient : Client,message : Message) : Promise<void> {
 
     for (const link of arrayOfLinks) {
         if (link.isSuspicious) {   
-            await wwclient.sendMessage(message.from, `${link.link} is suspicious`)
+            await wwclient.sendMessage(message.from, `${link.link} is not safe`)
         }
     }
 

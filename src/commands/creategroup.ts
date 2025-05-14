@@ -1,12 +1,8 @@
 import { Chat, Client, Contact, ContactId, CreateGroupResult, GroupParticipant, Message } from "whatsapp-web.js";
 
-export const Name : string = ""
-export const Command : string = ""
-export const Description : string = ""
-export const AdminOnly : boolean = true
 
-async function createGroupChat(wwclient : Client, message : Message) : Promise<Message | void>{
-    const participants : Array<Contact> | Array<GroupParticipant> | Array<ContactId> | Array<string> = await message.getMentions()
+export async function createGroupChat(wwclient : Client, message : Message) : Promise<Message | void>{
+    let participants : Array<Contact> | Array<GroupParticipant> | Array<ContactId> | Array<string>= await message.getMentions()
     const chat : Chat = await message.getChat()
 
     if (!chat.isGroup) {
@@ -15,12 +11,14 @@ async function createGroupChat(wwclient : Client, message : Message) : Promise<M
 
     let leaveChat : boolean = false
     let name : string;
+    let digit : RegExp = /\d/
 
-    if (participants.length != 0 && /\d/.test(message.body[(message.body.indexOf("@") + 1)])) {
-
+    console.log("here")
+    if (participants.length != 0 && digit.test(message.body[(message.body.indexOf("@") + 1)])) {
+        console.log("here too")
         name = message.body.slice(2, message.body.indexOf("@"))
 
-    } else if (message.body.slice(message.body.length - 10, message.body.length).toLowerCase() != "--everyone") {
+    } else if (message.body.slice(message.body.length - 11, message.body.length).toLowerCase() != "--everyone") {
 
         leaveChat = true
         name = message.body.slice(2, message.body.length - 10)
@@ -55,10 +53,10 @@ async function createGroupChat(wwclient : Client, message : Message) : Promise<M
 
     //This message should be sent as a personal message to the user who invoked this function not in the group chat
 
-    return await wwclient.sendMessage(message.from, "Group Created")
+    return await message.react("")
     
     //,cb <name of the new group> ( --everyone || @userMentions )
     //one rule the name of the group should not have "@" 
-    //example := ,cg cse 114 asd as asd das @mentions  || ,cg cse 115 asdf asdefds --everyon
+    //example := ,cg cse 114 asd as asd das @mentions  || ,cg cse 115 asdf a`sdefds --everyone
 
 }

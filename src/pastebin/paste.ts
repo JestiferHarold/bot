@@ -49,7 +49,7 @@ export async function paste(wwclient : Client, message : Message) : Promise<void
         else {
              try {
                 viewType = getViewValue(flag)
-            } catch (error) {
+            } catch (error : any) {
                 return wwclient.sendMessage(message.from , error.message)
             }
         }

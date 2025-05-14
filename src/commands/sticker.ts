@@ -10,7 +10,7 @@ async function sticker(wwclient : Client, message : Message) : Promise<void | Me
     let contact : Contact = await message.getContact()
     let target : Message
 
-    if (!message.hasQuotedMsg) {
+    if (!message.hasMedia) {
         if (message.hasQuotedMsg) {
             target = await message.getQuotedMessage()
             if (!target.hasMedia) {
@@ -27,9 +27,10 @@ async function sticker(wwclient : Client, message : Message) : Promise<void | Me
 
     return await message.reply(
         media,
-        message.from,
+        undefined,
         {
-            sendMediaAsSticker : true,
+            //@ts-ignore
+            sendMediaAsSticker: true,
             stickerAuthor : "whatsapp sticker maker"
         }
     )

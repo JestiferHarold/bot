@@ -1,25 +1,39 @@
-import qrcode from 'qrcode-terminal'
-import { Chat, ChatTypes, Client, Contact, LocalAuth } from 'whatsapp-web.js'
-import { RevokedMessage } from './src/base/Text'
+import { Chat, ChatTypes, Client, Contact, LocalAuth, MessageMedia } from 'whatsapp-web.js'
+import {generate} from 'qrcode-terminal' //Importing error man fuck tsc, just import the function, don't default
+import { QrcodeOptions } from 'ts-qrcode-terminal/types/types'
+import { RevokedMessage } from './src/base/RevokedMessage'
+import { getDeletedMessage } from './src/client/deletedmessage'
+import { createGroupChat } from './src/commands/creategroup'
+import sticker from './src/commands/sticker'
 
 const wwclient : Client = new Client (
     {
         authStrategy : new LocalAuth (
             {
-                dataPath : ""
+                dataPath : "logging"
             }
         )
     }
 )
+
 let chats : any | Array<Chat> | Array<RevokedMessage>
+
 wwclient.on('qr', (qr) => {
-    // yarn add qrcode-terminal
+    generate(
+        qr,
+        {
+            small : true
+        }
+    )
 })
 
+wwclient.initialize()
+
 wwclient.on('ready', async () => {
+    console.log("Client on")
     chats = await wwclient.getChats()
     for (let num = 0; num < chats.length; num ++) {
-        chats[num] = new RevokedMessage(chats[num].id, chats[num].isGroup)
+        chats[num] = new RevokedMessage(chats[num].id._serialized, chats[num].isGroup)
     }
 })
 
@@ -28,22 +42,46 @@ wwclient.on('message_revoke_everyone', async (after, before) => {
     let chat : Chat | undefined = await before?.getChat()
     let contact : Contact | undefined = await before?.getContact()
     chat = chat == undefined ? await after.getChat() : chat
-    let num : number
+    let media : MessageMedia | null
     
-    for (num = 0; num < chats.length; num ++) {
-        if (chats[num].chat == chat.id) {
+    if (before?.hasMedia) {
+        media = await before.downloadMedia()
+        console.log(media)
+    } else {
+        media = null
+    }
+
+    for (let num : number = 0; num < chats.length; num ++) {
+        if (chats[num].chat == chat.id._serialized) {
             chats[num].setMessage(
                 before?.type,
                 //@ts-expect-error
-                contact.getFormattedNumber(),
+                await contact.getFormattedNumber(),
                 before?.body,
-                (before?.hasMedia ? before.downloadMedia() : null),
+                media,
                 before?.isForwarded,
-                before?.forward,
+                before?.forwardingScore,
                 before?.to,
-                before?.timestamp
+                before?.timestamp,
+                after.timestamp
             )
             break
         }
+    }
+})
+
+wwclient.on('message', async (message) => {
+    if (message.body == ",s") {
+        await getDeletedMessage(message, chats)
+    }
+})  
+
+wwclient.on('message', async (message) => {
+    if (message.body.slice(0,2) == ",c") {
+        await createGroupChat(wwclient, message)
+    }
+
+    if (message.body == ",sticker") {
+        await sticker(wwclient, message)
     }
 })

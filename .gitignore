@@ -16,3 +16,6 @@
 test.html
 test.ts
 .gitignore
+test.js
+logging/
+.wwebjs_cache

@@ -1,6 +1,11 @@
 {
   "name": "final port",
   "packageManager": "yarn@4.6.0",
+  "scripts": {
+    "build": "tsc",
+    "start": "ts-node main.ts",
+    "test": "ts-node src/games/hangman/hangman.ts"
+  },
   "dependencies": {
     "@mistralai/mistralai": "^1.6.0",
     "canvacord": "^6.0.2",
@@ -11,6 +16,7 @@
     "pastebin-api": "^7.0.0",
     "qrcode-terminal": "^0.12.0",
     "react": "^19.1.0",
+    "ts-qrcode-terminal": "^1.0.1",
     "tsc": "^2.0.4",
     "whatsapp-web.js": "^1.27.0"
   },
@@ -18,5 +24,10 @@
     "puppeteer-core@18.2.1": {
       "unplugged": true
     }
+  },
+  "devDependencies": {
+    "@types/qrcode-terminal": "^0.12.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3"
   }
 }
