@@ -72,7 +72,7 @@ export async function paste(wwclient : Client, message : Message) : Promise<void
 function getViewValue(flag : string) : void | Publicity{
     switch (flag.slice(2)) {
         case "":
-            return //This part won't be invoked until the flag just contains "--" same for the other function too
+            return //This part won't be invoked until the flag contains just "--" same for the other function too
         case "unl":
             return  Publicity.Unlisted
         case "pri":
@@ -110,3 +110,5 @@ function getExpDate(flag : string) : void | ExpireDate{
             throw new Error("Bad Flags")
     }
 }
+
+//I don't think there is anything else to do other than the formats flag which is a pain 
