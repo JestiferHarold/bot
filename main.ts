@@ -5,6 +5,7 @@ import { RevokedMessage } from './src/base/RevokedMessage'
 import { getDeletedMessage } from './src/client/deletedmessage'
 import { createGroupChat } from './src/commands/creategroup'
 import sticker from './src/commands/sticker'
+import { setClientPicture } from './src/client/profilepicture'
 
 const wwclient : Client = new Client (
     {
@@ -16,7 +17,7 @@ const wwclient : Client = new Client (
     }
 )
 
-let chats : any | Array<Chat> | Array<RevokedMessage>
+let chats : any | Array<Chat> | Array<RevokedMessage> 
 
 wwclient.on('qr', (qr) => {
     generate(
@@ -83,5 +84,9 @@ wwclient.on('message', async (message) => {
 
     if (message.body == ",sticker") {
         await sticker(wwclient, message)
+    }
+
+    if (message.body.slice(0, 3) == ",pp") {
+        await setClientPicture(wwclient, message)
     }
 })

@@ -3,7 +3,7 @@
   "packageManager": "yarn@4.6.0",
   "scripts": {
     "build": "tsc",
-    "start": "ts-node main.ts",
+    "start": "npx ts-node main",
     "test": "ts-node src/games/hangman/hangman.ts"
   },
   "dependencies": {

@@ -1,9 +1,10 @@
 import { Chat, Client, Contact, ContactId, CreateGroupResult, GroupParticipant, Message } from "whatsapp-web.js";
 
 
-export async function createGroupChat(wwclient : Client, message : Message) : Promise<Message | void>{
+export async function createGroupChat(wwclient : Client, message : Message) : Promise<Message | void | Chat>{
     let participants : Array<Contact> | Array<GroupParticipant> | Array<ContactId> | Array<string>= await message.getMentions()
     const chat : Chat = await message.getChat()
+    const contact : Contact = await message.getContact()
 
     if (!chat.isGroup) {
         return
@@ -18,7 +19,7 @@ export async function createGroupChat(wwclient : Client, message : Message) : Pr
         console.log("here too")
         name = message.body.slice(2, message.body.indexOf("@"))
 
-    } else if (message.body.slice(message.body.length - 11, message.body.length).toLowerCase() != "--everyone") {
+    } else if (message.body.toLowerCase().endsWith("--everyone")) {
 
         leaveChat = true
         name = message.body.slice(2, message.body.length - 10)
@@ -36,7 +37,7 @@ export async function createGroupChat(wwclient : Client, message : Message) : Pr
     }
 
     //@ts-ignore
-    const group : CreateGroupResult | string = await wwclient.createGroup(
+    const group : CreateGroupResult = await wwclient.createGroup(
         name, 
         //@ts-expect-error
         participants,
@@ -46,14 +47,27 @@ export async function createGroupChat(wwclient : Client, message : Message) : Pr
         }
     )
 
+    const newGroupChat : Chat = await wwclient.getChatById(group.gid._serialized)
+
+    //@ts-ignore
+    await newGroupChat.setInfoAdminsOnly(true)
+
+    //@ts-ignore
+    await newGroupChat.setAddMembersAdminsOnly(true)
+
+    //@ts-ignore
+    await newGroupChat.promoteParticipants([contact.id._serialized])
+
     if (leaveChat) {
         //@ts-ignore
-        await wwclient.getChatById(group.gid).leave()
+        await newGroupChat.leave()
     }
 
     //This message should be sent as a personal message to the user who invoked this function not in the group chat
 
-    return await message.react("")
+    await message.react("✅")
+
+    return newGroupChat
     
     //,cb <name of the new group> ( --everyone || @userMentions )
     //one rule the name of the group should not have "@" 
