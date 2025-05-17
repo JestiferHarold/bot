@@ -1,12 +1,12 @@
 import { Chat, Contact, Message } from "whatsapp-web.js"
 
-class SavedContact {
-    contact : Contact
+export class SavedContact {
+    contact_serialized : string
     cCounter : number
 
-    public constructor(contact : Contact) {
+    public constructor(contact : string) {
         this.cCounter = 0
-        this.contact = contact
+        this.contact_serialized = contact
     }
 
     public incrementCCounter() {this.cCounter++}

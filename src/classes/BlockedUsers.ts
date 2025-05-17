@@ -1,5 +1,4 @@
 import { Chat, Client, Contact, Message } from "whatsapp-web.js";
-// import { User } from "./User";
 
 class MutedUser{
 
