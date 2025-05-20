@@ -1,12 +1,13 @@
 import { Chat, ChatTypes, Client, Contact, LocalAuth, MessageMedia } from 'whatsapp-web.js'
-import {generate} from 'qrcode-terminal' //Importing error man fuck tsc, just import the function, don't default
+import {error, generate} from 'qrcode-terminal' //Importing error man fuck tsc, just import the function, don't default
 import { QrcodeOptions } from 'ts-qrcode-terminal/types/types'
 import { RevokedMessage } from './src/classes/RevokedMessage'
-import { getDeletedMessage } from './src/client/deletedmessage'
+import { getDeletedMessage } from './src/client/getrevokedmessage'
 import { createGroupChat } from './src/commands/creategroup'
 import sticker from './src/commands/sticker'
 import { setClientPicture } from './src/client/profilepicture'
 import { SavedContact } from './src/classes/User'
+import { MutedUser } from './src/classes/BlockedUsers'
 
 const wwclient : Client = new Client (
     {
@@ -18,9 +19,12 @@ const wwclient : Client = new Client (
     }
 )
 
-let chats : any | Array<Chat> | Array<RevokedMessage> 
+let chats : any | Array<Chat> | Array<RevokedMessage>
+let revokedChats : Array<RevokedMessage> = new Array() 
 let mycontacts : Array<SavedContact> = new Array()
 let cmds : Array<string> = new Array()
+let saves
+let groupsMuted : Array< MutedUser > = new Array()
 
 wwclient.on('qr', (qr) => {
     generate(
@@ -34,17 +38,69 @@ wwclient.on('qr', (qr) => {
 wwclient.initialize()
 
 wwclient.on('ready', async () => {
-    console.log("Client on")
+
+    saves : JSON = await fetch("./saves.json").then(parsedjson => parsedjson.json()).catch(error => console.log("Saves error"))
+
     chats = await wwclient.getChats()
-    for (let num = 0; num < chats.length; num ++) {
-        chats[num] = new RevokedMessage(chats[num].id._serialized, chats[num].isGroup)
+    
+    let objects : {
+        BlockedUsers : Array< {
+            groupChatId : string,
+            users : Array<string>            
+        } >,
+        MyContacts : Array < {
+            contactId : string,
+            uses : number
+        } >
+    } = {
+        BlockedUsers : [
+            {
+                groupChatId : "nil",
+                users : []
+            }
+        ],
+        MyContacts : [
+            {
+                contactId : "nil",
+                uses : 1
+            }
+        ]
     }
 
-    for (let contact of await wwclient.getContacts()) {
-        if (contact.isMyContact && !contact.isBlocked && !contact.isBusiness && !contact.isEnterprise && !contact.isGroup) {
-            mycontacts.push(new SavedContact(contact.id._serialized))
+    if (saves == undefined) {
+        for (let chat of chats) {
+
+            if (chat.isGroup) {
+                objects.BlockedUsers.push(
+                    {
+                        groupChatId : chat.id._serialized,
+                        users : []
+                    }
+                )
+
+                revokedChats.push(new RevokedMessage(chat.id._serialized, chat.isGroup))
+                groupsMuted.push(new MutedUser(chat.id._serialized, chat.isGroup))
+            }
+            
         }
-    }  
+
+        for (let contact of await wwclient.getContacts()) {
+            if (contact.isMyContact && !contact.isBlocked && !contact.isBusiness && !contact.isEnterprise && !contact.isGroup) {
+                mycontacts.push(new SavedContact(contact.id._serialized))
+                objects.MyContacts.push(
+                    {
+                        contactId : contact.id._serialized,
+                        uses : 0
+                    }
+                )
+            }
+        }
+
+        objects.BlockedUsers.shift()
+        objects.MyContacts.shift()
+    }
+
+    console.log("Client started")
 
 })
 
@@ -82,22 +138,21 @@ wwclient.on('message_revoke_everyone', async (after, before) => {
 })
 
 wwclient.on('message', async (message) => {
-    if (message.body == ",s") {
-        await getDeletedMessage(message, chats)
-    }
-})  
-
-wwclient.on('message', async (message) => {
-    if (message.body.slice(0,2) == ",c") {
-        await createGroupChat(wwclient, message)
-    }
-
-    if (message.body == ",sticker") {
-        await sticker(wwclient, message)
-    }
-
-    if (message.body.slice(0, 3) == ",pp") {
-        await setClientPicture(wwclient, message)
+    switch (message.body.split(" ")[0].toLowerCase()) {
+        case ",s":
+            await getDeletedMessage(message, chats)
+            break
+        case ",cg":
+            await createGroupChat(wwclient, message)
+            break
+        case ",sticker":
+            await sticker(wwclient, message)
+            break
+        case ",pp":
+            await setClientPicture(wwclient, message)
+            break
+        case ",block":
+            break
     }
 })
 
