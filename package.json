@@ -7,11 +7,13 @@
     "test": "ts-node src/games/hangman/hangman.ts"
   },
   "dependencies": {
+    "@google/generative-ai": "^0.24.1",
     "@mistralai/mistralai": "^1.6.0",
     "canvacord": "^6.0.2",
     "dotenv": "^16.5.0",
     "duckduckgo-images-api": "^1.0.5",
     "fs-js": "^1.0.6",
+    "gemini-api": "^2.0.4",
     "jimp": "^1.6.0",
     "pastebin-api": "^7.0.0",
     "qrcode-terminal": "^0.12.0",

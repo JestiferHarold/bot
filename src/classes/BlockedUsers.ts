@@ -1,8 +1,12 @@
 import { Chat, Client, Contact, Message } from "whatsapp-web.js";
 
+/*
+    @Deprecated (More like I have no idea what I did here)
+*/
+
 export class MutedUser{
 
-    //this is for chat where teh users are muted 
+    //this is for chat where teh users are muted, a user can be muted in one chat but he is free to message in another
     chat : Chat
     isGroup : boolean
     blockedUsers ?: Array<string>
@@ -28,13 +32,6 @@ export class MutedUser{
                 contactIDs.push(mention.id._serialized)
             }
 
-            // for (const id of saves.BlockedUsers) {
-            //     if (id.chatId == chat) {
-            //         id.chatId.users.push()
-            //     }
-            // }
-            //use index based
-
             for (let i = 0; i < saves.BlockedUsers.length; i ++) {
                 if (saves.BlockedUsers[i].chatId == chat) {
                     contactIDs.forEach(element => {
@@ -59,7 +56,7 @@ export class MutedUser{
         }
     }
 
-    public async unmuteUser(message : Message, saves : any) {
+    public async unmuteUser(message : Message) {
         const mentions : Array<Contact> = await message.getMentions()
         
         if (mentions.length == 0) {
@@ -81,7 +78,6 @@ export class MutedUser{
 
         }
 
-        
     }
 
 
