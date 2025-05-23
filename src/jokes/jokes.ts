@@ -12,7 +12,7 @@ export async function crackAJoke(message : Message, wwclient : Client) {
 
     if (message.body.toLowerCase().split(" ").includes("-t") || message.body.toLowerCase().split(" ").includes("--twopart")) {
         url += (url.endsWith("y") ? "?type=twopart" : "&type=twopart")
-        timeout = 30000
+        timeout = 300000
     } else {
         url += (url.endsWith("y") ? "?type=single" : "&type=single")
     }
@@ -36,12 +36,12 @@ export async function crackAJoke(message : Message, wwclient : Client) {
         )
     }
 
-    const joke = response.json()
+    const joke = await response.json()
     //@ts-ignore
     if (joke.type == "twopart") {
         //@ts-ignore
         await wwclient.sendMessage(message.from, joke.setup)
-        setTimeout(() => {}, timeout)
+        setTimeout(() => {}, timeout) // It's not working 
         //@ts-ignore
         return await wwclient.sendMessage(message.from, joke.delivery)
     }

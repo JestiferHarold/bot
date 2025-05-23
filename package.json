@@ -10,14 +10,22 @@
     "@google/generative-ai": "^0.24.1",
     "@mistralai/mistralai": "^1.6.0",
     "canvacord": "^6.0.2",
+    "canvas": "^3.1.0",
+    "chart.js": "^4.4.9",
+    "chartjs-node-canvas": "^5.0.0",
     "dotenv": "^16.5.0",
     "duckduckgo-images-api": "^1.0.5",
     "fs-js": "^1.0.6",
     "gemini-api": "^2.0.4",
     "jimp": "^1.6.0",
+    "nodeplotlib": "^1.1.2",
     "pastebin-api": "^7.0.0",
+    "plotly.js-basic-dist": "^3.0.1",
+    "plotly.js-dist-min": "^3.0.1",
+    "puppeteer": "^24.9.0",
     "qrcode-terminal": "^0.12.0",
     "react": "^19.1.0",
+    "ts-node": "^10.9.2",
     "ts-qrcode-terminal": "^1.0.1",
     "tsc": "^2.0.4",
     "whatsapp-web.js": "^1.27.0"
@@ -28,8 +36,9 @@
     }
   },
   "devDependencies": {
+    "@types/plotly.js-basic-dist": "^1.54.4",
+    "@types/plotly.js-dist-min": "^2.3.4",
     "@types/qrcode-terminal": "^0",
-    "ts-node": "^10.9.2",
     "typescript": "^5.8.3"
   }
 }

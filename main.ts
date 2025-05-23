@@ -1,24 +1,25 @@
 import { Chat, ChatTypes, Client, Contact, LocalAuth, MessageMedia } from 'whatsapp-web.js'
-import {error, generate} from 'qrcode-terminal' //Importing error man fuck tsc, just import the function, don't default
+import qrcode from 'qrcode-terminal' //Importing error man fuck tsc, just import the function, don't default
 import { QrcodeOptions } from 'ts-qrcode-terminal/types/types'
-import { RevokedMessage } from './src/classes/RevokedMessage'
-import { getDeletedMessage } from './src/client/getrevokedmessage'
-import { createGroupChat } from './src/commands/creategroup'
-import sticker from './src/commands/sticker'
-import { setClientPicture } from './src/client/profilepicture'
-import { SavedContact } from './src/classes/User'
-import { MutedUser } from './src/classes/BlockedUsers'
-import { writeFile } from "fs"
-import { Sterlizing } from './src/types/sterlized'
+// import { RevokedMessage } from './src/classes/RevokedMessage'
+// import { getDeletedMessage } from './src/client/getrevokedmessage'
+// import { createGroupChat } from './src/commands/creategroup'
+// import sticker from './src/commands/sticker'
+// import { setClientPicture } from './src/client/profilepicture'
+// import { SavedContact } from './src/classes/User'
+// import { MutedUser } from './src/classes/BlockedUsers'
+// import { writeFile } from "fs"
+// import { Sterlizing } from './src/types/sterlized'
 import { geminiChat, geminiChatForImages } from './src/Ai/gemini'
 import { mistralTextGeneration } from './src/Ai/mistral'
 import { crackAJoke } from './src/jokes/jokes'
+import { getRepositoryData } from './src/GitLines/repositorylines'
 
-const wwclient : Client = new Client (
+const wwclient : Client = new Client(
     {
         authStrategy : new LocalAuth (
             {
-                dataPath : "logging"
+                dataPath : "whatsapplog"
             }
         )
     }
@@ -31,8 +32,8 @@ const wwclient : Client = new Client (
 // let response
 // let groupsMuted : Array< MutedUser > = new Array()
 
-wwclient.on('qr', (qr) => {
-    generate(
+wwclient.on('qr', qr => {
+    qrcode.generate(
         qr,
         {
             small : true
@@ -192,7 +193,7 @@ wwclient.on("message", async (message) => {
         await geminiChatForImages(wwclient, message)
     }
 
-    if (message.body.startsWith(",j")) {
-        await crackAJoke(message, wwclient)
+    if (message.body.startsWith(",r")) {
+        await getRepositoryData(wwclient, message)
     }
 })
