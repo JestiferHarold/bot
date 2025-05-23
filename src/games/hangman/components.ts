@@ -11,7 +11,3 @@ export async function retriveWord() : Promise<string>{
     
 }
 
-
-// function charExists()
-//Complete screenshot
-

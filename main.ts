@@ -12,6 +12,7 @@ import { writeFile } from "fs"
 import { Sterlizing } from './src/types/sterlized'
 import { geminiChat, geminiChatForImages } from './src/Ai/gemini'
 import { mistralTextGeneration } from './src/Ai/mistral'
+import { crackAJoke } from './src/jokes/jokes'
 
 const wwclient : Client = new Client (
     {
@@ -23,12 +24,12 @@ const wwclient : Client = new Client (
     }
 )
 
-let chats : any | Array<Chat> | Array<RevokedMessage>
-let revokedChats : Array<RevokedMessage> = new Array() 
-let mycontacts : Array<SavedContact> = new Array()
-let cmds : Array<string> = new Array()
-let response
-let groupsMuted : Array< MutedUser > = new Array()
+// let chats : any | Array<Chat> | Array<RevokedMessage>
+// let revokedChats : Array<RevokedMessage> = new Array() 
+// let mycontacts : Array<SavedContact> = new Array()
+// let cmds : Array<string> = new Array()
+// let response
+// let groupsMuted : Array< MutedUser > = new Array()
 
 wwclient.on('qr', (qr) => {
     generate(
@@ -37,6 +38,10 @@ wwclient.on('qr', (qr) => {
             small : true
         }
     )
+})
+
+wwclient.on("auth_failure", () => {
+    console.log("Authentication failure")
 })
 
 wwclient.initialize()
@@ -174,7 +179,7 @@ wwclient.initialize()
 //     }
 // })
 
-wwclient.on('ready', () => {
+wwclient.on("ready", () => {
     console.log("started")
 })
 
@@ -185,5 +190,9 @@ wwclient.on("message", async (message) => {
 
     if (message.body.slice(0,4) == ",img") {
         await geminiChatForImages(wwclient, message)
+    }
+
+    if (message.body.startsWith(",j")) {
+        await crackAJoke(message, wwclient)
     }
 })

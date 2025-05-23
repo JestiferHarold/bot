@@ -879,7 +879,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/qrcode-terminal@npm:^0.12.2":
+"@types/qrcode-terminal@npm:^0":
   version: 0.12.2
   resolution: "@types/qrcode-terminal@npm:0.12.2"
   checksum: 10c0/9d8d75f76ed2f75faaa2007850d884ce71ad25e05d8683a2b42e6b6cb6568d0d87a3ebb427e174fd77ab4264de40923806785fde2d97d81fce393f127d88931f
@@ -1522,7 +1522,7 @@ __metadata:
   dependencies:
     "@google/generative-ai": "npm:^0.24.1"
     "@mistralai/mistralai": "npm:^1.6.0"
-    "@types/qrcode-terminal": "npm:^0.12.2"
+    "@types/qrcode-terminal": "npm:^0"
     canvacord: "npm:^6.0.2"
     dotenv: "npm:^16.5.0"
     duckduckgo-images-api: "npm:^1.0.5"
