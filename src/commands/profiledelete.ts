@@ -12,8 +12,6 @@ async function deleteGroupProfilePicture(wwclient : Client, message : Message) :
         return
     }
 
-    chat = chat as GroupChat
-
     // @ts-ignore
     return await chat.deletePicture()
 }

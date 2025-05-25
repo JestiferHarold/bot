@@ -3,7 +3,7 @@ import { GoogleGenerativeAI, GoogleGenAI, ChatSession, GenerateContentResult, Ge
 import { Client, Message, MessageMedia } from "whatsapp-web.js"
 
 //@ts-ignore
-const genAI : GoogleGenerativeAI = new GoogleGenerativeAI(process.env.GEMINI_API)
+const genAI : GoogleGenerativeAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY)
 
 const model : GenerativeModel = genAI.getGenerativeModel(
     {
@@ -64,11 +64,7 @@ export async function geminiChatForImages(wwclient : Client, message : Message) 
     } else {
         media = await message.downloadMedia()
     }
-    console.log(
-        media.data,
-        media.filesize,
-        media.mimetype
-    )
+    
     const response : Promise<GenerateContentResult> = model.generateContent(
         {
          contents : [
@@ -98,6 +94,7 @@ export async function geminiChatForImages(wwclient : Client, message : Message) 
 
 // ASD ASD gemini cannot send images
 export async function generateImage(wwclient : Client, message : Message) {
+    
     const prompt : string = message.body.split(" ").slice(1).join("")
     const response = imageModel.generateContent(
         {
@@ -113,7 +110,6 @@ export async function generateImage(wwclient : Client, message : Message) {
             ]
         }
     )
-
     
 }
 

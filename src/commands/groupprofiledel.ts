@@ -14,5 +14,10 @@ async function deleteProfilePicture(wwclient : Client, message : Message) : Prom
 
     //@ts-ignore
     const deletion : boolean = await chat.deletePicture()
-    return deletion
+    
+    if (deletion) {
+        return await message.react("✅")
+    }
+
+    return await message.react("❌")
 }

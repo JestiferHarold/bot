@@ -10,10 +10,11 @@ async function leaveGroupChat(wwclient : Client, message : Message) {
     let contact : Contact = await message.getContact()
 
     if (!chat.isGroup) {
-        return false
+        return 
     }
 
-    // return await 
+    //@ts-ignore
+    return await chat.leave()
 }
 
 export default leaveGroupChat

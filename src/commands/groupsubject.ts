@@ -13,12 +13,16 @@ async function groupName(wwclient : Client, message : Message) : Promise<boolean
         return
     }
 
-    //delete line 12 
+    //delete line 12 :: no idea why I wrote this
     const contact : Contact = await message.getContact()
     const chat : Chat = await message.getChat()
 
     //@ts-ignore
-    const description : boolean = await chat.setSubject(split.slice(1))
+    const description : boolean = await chat.setSubject(split.slice(1).join(" "))
 
-    return description
+    if (description) {
+        return await message.react("✅")
+    }
+    
+    return await message.react("❌")
 }

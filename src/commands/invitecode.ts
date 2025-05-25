@@ -7,8 +7,8 @@ export const AdminOnly : boolean = true
 
 async function getInviteCode(message : Message) : Promise<Message> {
     let chat : Chat = await message.getChat()
-    // let code = await message.invite
-    let code : string = "invite code"
+    //@ts-ignore
+    let code = await chat.getInviteCode()
     return message.reply(`Invite Code ${code}`)
 }
 

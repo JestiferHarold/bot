@@ -42,7 +42,7 @@ async function flip(wwclient : Client, message : Message) {
         }
     )
 
-    const base64 : string = await Image.getBase64("image/png")
+    const base64 : string = (await Image.getBase64("image/png")).split(",")[1]
     const media : MessageMedia = new MessageMedia('image/png', base64, "circle.png")
 
     return await message.reply(media)

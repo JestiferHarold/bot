@@ -38,5 +38,9 @@ async function setGroupPicture(wwclient : Client, message : Message) : Promise<b
     //@ts-ignore
     const updateProfile : boolean = chat.setPicture(target)
 
-    return updateProfile
+    if (updateProfile) {
+        return await message.react("✅")
+    }
+
+    return await message.react("❌")
 }

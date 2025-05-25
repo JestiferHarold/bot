@@ -1,4 +1,4 @@
-import { Chat, Client, Message } from "whatsapp-web.js";
+ import { Chat, Client, Message } from "whatsapp-web.js";
 
 export const Name : string = ""
 export const Command : string = ""

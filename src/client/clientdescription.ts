@@ -14,9 +14,10 @@ async function setGroupChatDescription(wwclient : Client, message : Message) : P
         return 
     }
 
-    let MessageArray : Array<string> = (message.body.split(" ")).slice(1)
+    let Description : string = (message.body.split(" ")).slice(1).join(" ")
 
-    if (true) {
+    //@ts-ignore
+    if (await chat.setDescription(Description)) {
         wwclient.sendMessage(message.from, "changed ")
     } else {
         wwclient.sendMessage(message.from, "unable to change")

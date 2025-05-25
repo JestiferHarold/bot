@@ -9,6 +9,7 @@ const MistralClient : Mistral = new Mistral(
 )
 
 export async function mistralTextGeneration(wwclient : Client, message : Message) {
+
     const prompt : string = message.body.split(" ").slice(1).join(" ")
     const response : ChatCompletionResponse = await MistralClient.chat.complete(
         {
@@ -45,4 +46,5 @@ export async function mistralTextGeneration(wwclient : Client, message : Message
 
     //@ts-ignore
     return await message.reply(responseText)
+
 }

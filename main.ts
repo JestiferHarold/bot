@@ -1,19 +1,33 @@
 import { Chat, ChatTypes, Client, Contact, LocalAuth, MessageMedia } from 'whatsapp-web.js'
 import qrcode from 'qrcode-terminal' //Importing error man fuck tsc, just import the function, don't default
 import { QrcodeOptions } from 'ts-qrcode-terminal/types/types'
-// import { RevokedMessage } from './src/classes/RevokedMessage'
-// import { getDeletedMessage } from './src/client/getrevokedmessage'
-// import { createGroupChat } from './src/commands/creategroup'
-// import sticker from './src/commands/sticker'
-// import { setClientPicture } from './src/client/profilepicture'
-// import { SavedContact } from './src/classes/User'
-// import { MutedUser } from './src/classes/BlockedUsers'
-// import { writeFile } from "fs"
-// import { Sterlizing } from './src/types/sterlized'
+import { getDeletedMessage } from './src/client/getrevokedmessage'
+import { createGroupChat } from './src/commands/creategroup'
+import sticker from './src/commands/sticker'
+import { setClientPicture } from './src/client/profilepicture'
 import { geminiChat, geminiChatForImages } from './src/Ai/gemini'
 import { mistralTextGeneration } from './src/Ai/mistral'
 import { crackAJoke } from './src/jokes/jokes'
 import { getRepositoryData } from './src/GitLines/repositorylines'
+import { PlaceHolder } from './src/games/Trivia/trivia'
+import { RevokedMessage } from './src/classes/RevokedMessage'
+import { SavedContact } from './src/classes/User'
+import { MutedUser } from './src/classes/BlockedUsers'
+import { Sterlizing } from './src/types/sterlized'
+import HitlerlifyAvatar from './src/image/hitler'
+
+//imp 
+import dotenv from "dotenv"
+dotenv.config()
+
+import "./src/Ai/gemini"
+import "./src/Ai/mistral"
+import { ScreenShot } from './src/commands/screenshot'
+import { Apod } from './src/Nasa/apod'
+import { EarthImage } from './src/Nasa/earth'
+import { dadJoke } from './src/jokes/dadjokes'
+import { kanyeSpeaks } from './src/jokes/kanyequotes'
+
 
 const wwclient : Client = new Client(
     {
@@ -21,16 +35,20 @@ const wwclient : Client = new Client(
             {
                 dataPath : "whatsapplog"
             }
-        )
+        ),
+        puppeteer : {
+            headless : true,
+            args : ['--no-sandbox', '--disable-setuid-sandbox']
+        }
     }
 )
 
-// let chats : any | Array<Chat> | Array<RevokedMessage>
-// let revokedChats : Array<RevokedMessage> = new Array() 
-// let mycontacts : Array<SavedContact> = new Array()
-// let cmds : Array<string> = new Array()
-// let response
-// let groupsMuted : Array< MutedUser > = new Array()
+let chats : any | Array<Chat> | Array<RevokedMessage>
+let revokedChats : Array<RevokedMessage> = new Array() 
+let mycontacts : Array<SavedContact> = new Array()
+let cmds : Array<string> = new Array()
+let response
+let groupsMuted : Array< MutedUser > = new Array()
 
 wwclient.on('qr', qr => {
     qrcode.generate(
@@ -46,6 +64,12 @@ wwclient.on("auth_failure", () => {
 })
 
 wwclient.initialize()
+
+wwclient.on("message", async (message) => {
+    if (message.body.startsWith(",kayne")) {
+        await kanyeSpeaks(wwclient, message)
+    }
+})
 
 // wwclient.on('ready', async () => {
 
@@ -100,46 +124,48 @@ wwclient.initialize()
 
     
 
-//     writeFile("saves.json", objects.toString(), (error) => {
-//         if (error) throw error;
-//     })
+// // ("saves.json", objects.toString(), (error) => {
+// //         if (error) throw error;
+// //     })
 
-//     console.log("Client started")
+// //     console.log("Client started")
 
 // })
 
-// wwclient.on('message_revoke_everyone', async (after, before) => {
-//     const body : string | null | undefined = before?.body
-//     let chat : Chat | undefined = await before?.getChat()
-//     let contact : Contact | undefined = await before?.getContact()
-//     chat = chat == undefined ? await after.getChat() : chat
-//     let media : MessageMedia | null
+wwclient.on('ready', () => {console.log("started")})
+
+wwclient.on('message_revoke_everyone', async (after, before) => {
+    const body : string | null | undefined = before?.body
+    let chat : Chat | undefined = await before?.getChat()
+    let contact : Contact | undefined = await before?.getContact()
+    chat = chat == undefined ? await after.getChat() : chat
+    let media : MessageMedia | null
     
-//     if (before?.hasMedia) {
-//         media = await before.downloadMedia()
-//         console.log(media)
-//     } else {
-//         media = null
-//     }
+    if (before?.hasMedia) {
+        media = await before.downloadMedia()
+        console.log(media)
+    } else {
+        media = null
+    }
 
-//     for (let num : number = 0; num < chats.length; num ++) {
-//         if (chats[num].chat == chat.id._serialized) {
-//             chats[num].setMessage(
-//                 before?.type,
-//                 //@ts-expect-error
-//                 await contact.getFormattedNumber(),
-//                 before?.body,
-//                 media,
-//                 before?.isForwarded,
-//                 before?.forwardingScore,
-//                 before?.to,
-//                 before?.timestamp,
-//                 after.timestamp
-//             )
-//             break
-//         }
-//     }
-// })
+    for (let num : number = 0; num < chats.length; num ++) {
+        if (chats[num].chat == chat.id._serialized) {
+            chats[num].setMessage(
+                before?.type,
+                //@ts-expect-error
+                await contact.getFormattedNumber(),
+                before?.body,
+                media,
+                before?.isForwarded,
+                before?.forwardingScore,
+                before?.to,
+                before?.timestamp,
+                after.timestamp
+            )
+            break
+        }
+    }
+})
 
 // wwclient.on('message', async (message) => {
 //     switch (message.body.split(" ")[0].toLowerCase()) {
@@ -180,9 +206,10 @@ wwclient.initialize()
 //     }
 // })
 
-wwclient.on("ready", () => {
-    console.log("started")
-})
+// wwclient.on("ready", () => {
+//     console.log("started")
+    
+// })
 
 wwclient.on("message", async (message) => {
     if (message.body.slice(0,4) == ",gen") {
@@ -196,4 +223,12 @@ wwclient.on("message", async (message) => {
     if (message.body.startsWith(",r")) {
         await getRepositoryData(wwclient, message)
     }
+})
+
+wwclient.on("message", async (message) => {
+    if (message.body.startsWith(",asd")) {
+        await HitlerlifyAvatar(wwclient, message)
+    }
+
+    console.log((await message.getContact()).id)
 })

@@ -4,7 +4,13 @@ import { error } from "qrcode-terminal";
 
 //,trivia -10 -cat -mid -type
 
-let trivias : Array<string> = new Array()
+let trivias : Array<{
+    type : string,
+    difficulty : string,
+    category : string,
+    question : string,
+    
+}> = new Array()
 let URL : string = "https://opentdb.com/api.php"
 
 export async function PlaceHolder(wwclient : Client, message : Message) {
@@ -96,7 +102,7 @@ export async function PlaceHolder(wwclient : Client, message : Message) {
         }
     }
 
-
+    console.log(URL)
 }
 
 function getType(flag : string) {

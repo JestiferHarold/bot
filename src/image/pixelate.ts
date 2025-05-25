@@ -37,7 +37,7 @@ async function ditherEffect(wwclient : Client, message : Message) {
     const Image = await Jimp.read(url) //what is the type of read???//
     Image.pixelate(pixelateIndex)
 
-    const base64 : string = await Image.getBase64("image/png")
+    const base64 : string = (await Image.getBase64("image/png")).split(",")[1]
     const media : MessageMedia = new MessageMedia('image/png', base64, "circle.png")
 
     return await message.reply(media)

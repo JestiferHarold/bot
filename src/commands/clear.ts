@@ -9,7 +9,7 @@ async function clearMessagesFromClient(wwclient : Client, message : Message) : P
     let id : string = message.from;
     let chat : Chat = await message.getChat()
 
-    if ((await chat.clearMessages()).valueOf()) {
+    if (await chat.clearMessages()) {
         return wwclient.sendMessage(id, "Messages Clearaed")
     }
 

@@ -20,5 +20,10 @@ async function groupDescription(wwclient : Client, message : Message) : Promise<
     //@ts-ignore
     const description : boolean = await chat.setDescription(split.slice(1))
 
-    return description
+    if (description) {
+        return await message.react("✅")
+    }
+
+    return await message.react("❌")
+
 }
