@@ -48,6 +48,7 @@ export async function geminiChat(wwclient : Client,message : Message) {
 
 export async function geminiChatForImages(wwclient : Client, message : Message) {
 
+    console.log(process.env.GEMINI_API_KEY)
     const prompt : string = message.body.split(" ").slice(1).join("")
     let media : MessageMedia
 

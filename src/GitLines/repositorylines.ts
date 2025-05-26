@@ -29,7 +29,6 @@ export async function getRepositoryData(wwclient : Client, message : Message) {
     //@ts-ignore
     let response = await responseFetch.json()
     let reply : string = ""
-    console.log(endPoint)
 
     //@ts-ignore
     if (response.Error == "Incorrect user/repo") {

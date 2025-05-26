@@ -5,7 +5,6 @@ import { getDeletedMessage } from './src/client/getrevokedmessage'
 import { createGroupChat } from './src/commands/creategroup'
 import sticker from './src/commands/sticker'
 import { setClientPicture } from './src/client/profilepicture'
-import { geminiChat, geminiChatForImages } from './src/Ai/gemini'
 import { mistralTextGeneration } from './src/Ai/mistral'
 import { crackAJoke } from './src/jokes/jokes'
 import { getRepositoryData } from './src/GitLines/repositorylines'
@@ -20,13 +19,16 @@ import HitlerlifyAvatar from './src/image/hitler'
 import dotenv from "dotenv"
 dotenv.config()
 
-import "./src/Ai/gemini"
-import "./src/Ai/mistral"
 import { ScreenShot } from './src/commands/screenshot'
 import { Apod } from './src/Nasa/apod'
 import { EarthImage } from './src/Nasa/earth'
 import { dadJoke } from './src/jokes/dadjokes'
 import { kanyeSpeaks } from './src/jokes/kanyequotes'
+import { geminiChat, geminiChatForImages } from './src/Ai/gemini'
+import { recieveAdvice } from './src/jokes/advice'
+import { getLyrics } from './src/songs/lyricsovh'
+import { convertToPDF } from './src/image/pdf'
+import { textToSpeech } from './src/commands/tts'
 
 
 const wwclient : Client = new Client(
@@ -66,8 +68,8 @@ wwclient.on("auth_failure", () => {
 wwclient.initialize()
 
 wwclient.on("message", async (message) => {
-    if (message.body.startsWith(",kayne")) {
-        await kanyeSpeaks(wwclient, message)
+    if (message.body.startsWith(",tts")) {
+        await textToSpeech(wwclient, message)
     }
 })
 
