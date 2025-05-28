@@ -5,7 +5,6 @@ import { getDeletedMessage } from './src/client/getrevokedmessage'
 import { createGroupChat } from './src/commands/creategroup'
 import sticker from './src/commands/sticker'
 import { setClientPicture } from './src/client/profilepicture'
-import { mistralTextGeneration } from './src/Ai/mistral'
 import { crackAJoke } from './src/jokes/jokes'
 import { getRepositoryData } from './src/GitLines/repositorylines'
 import { PlaceHolder } from './src/games/Trivia/trivia'
@@ -18,7 +17,7 @@ import HitlerlifyAvatar from './src/image/hitler'
 //imp 
 import dotenv from "dotenv"
 dotenv.config()
-
+import { mistralTextGeneration } from './src/Ai/mistral'
 import { ScreenShot } from './src/commands/screenshot'
 import { Apod } from './src/Nasa/apod'
 import { EarthImage } from './src/Nasa/earth'
@@ -29,6 +28,8 @@ import { recieveAdvice } from './src/jokes/advice'
 import { getLyrics } from './src/songs/lyricsovh'
 import { convertToPDF } from './src/image/pdf'
 import { textToSpeech } from './src/commands/tts'
+import { CAAS } from './src/Animals/cats/catasaservice'
+import { memes } from './src/jokes/imgflipmemes'
 
 
 const wwclient : Client = new Client(
@@ -71,7 +72,21 @@ wwclient.on("message", async (message) => {
     if (message.body.startsWith(",tts")) {
         await textToSpeech(wwclient, message)
     }
+    
+    if (message.body.startsWith(",meme")) {
+        await memes(wwclient, message)
+    }
+
+    if (message.body.startsWith(",sticker")) {
+        await sticker(wwclient, message)
+    }
 })
+
+wwclient.on("message", async (message) => {
+    if (message.body.startsWith(",mis")) {
+        await mistralTextGeneration(wwclient, message)
+    }
+}) 
 
 // wwclient.on('ready', async () => {
 
@@ -225,11 +240,19 @@ wwclient.on("message", async (message) => {
     if (message.body.startsWith(",r")) {
         await getRepositoryData(wwclient, message)
     }
+
+    if (message.body.startsWith(",apod")) {
+        await Apod(wwclient, message)
+    }
 })
 
 wwclient.on("message", async (message) => {
     if (message.body.startsWith(",asd")) {
         await HitlerlifyAvatar(wwclient, message)
+    }
+
+    if (message.body.startsWith(",caas")) {
+        await CAAS(wwclient, message)
     }
 
     console.log((await message.getContact()).id)

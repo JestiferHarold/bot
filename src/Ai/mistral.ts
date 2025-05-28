@@ -1,6 +1,7 @@
 import { Mistral } from "@mistralai/mistralai";
 import { ChatCompletionResponse, ContentChunk, FinishReason } from "@mistralai/mistralai/models/components";
 import { Client, Message } from "whatsapp-web.js";
+import { MistralAIModels } from "../types/mistralmodels";
 
 const MistralClient : Mistral = new Mistral(
     {
@@ -8,12 +9,67 @@ const MistralClient : Mistral = new Mistral(
     }
 )
 
+let model: MistralAIModels = MistralAIModels.MistralSmall
+
+export function modelSelector(message: string) {
+
+    switch(message) {
+        case "c":
+            model =  MistralAIModels.Codestral
+            break
+        case "d":
+            model =  MistralAIModels.Devstral
+            break
+        case "mn":
+            model =  MistralAIModels.MistralNemo
+            break
+        case "ms":
+            model =  MistralAIModels.MistralSmall
+            break
+        case "p":
+            model =  MistralAIModels.Pixtral
+            break
+        case "codestral":
+            model =  MistralAIModels.Codestral
+            break
+        case "devstral":
+            model =  MistralAIModels.Devstral
+            break
+        case "mistralnemo":
+            model =  MistralAIModels.MistralNemo
+            break
+        case "mistralsmall":
+            model =  MistralAIModels.MistralSmall
+            break
+        case "pixtral":
+            model =  MistralAIModels.Pixtral
+            break
+        default:
+            throw new Error("Model error")
+    } 
+
+}
+
+export async function availableModels(wwclient: Client, message: Message) {
+    return await wwclient.sendMessage(
+            message.from, 
+            "\`\`\`" +
+            "Models" +
+            "\`\`\`" + 
+            `\n\n${MistralAIModels.Codestral} :: \`-c\` or \`--codestral\`` + 
+            `\n${MistralAIModels.Devstral} :: \`-d\` or \`--devstral\`` +
+            `\n${MistralAIModels.MistralNemo} :: \`-mn\` or \`--mistralnemo\`` +
+            `\n${MistralAIModels.MistralSmall} :: \`-ms\` or \`--mistralsmall\`` +
+            `\n${MistralAIModels.Pixtral} :: \`-p\` or \`--pixtral`
+        )
+}
+
 export async function mistralTextGeneration(wwclient : Client, message : Message) {
 
     const prompt : string = message.body.split(" ").slice(1).join(" ")
     const response : ChatCompletionResponse = await MistralClient.chat.complete(
         {
-            model : "mistral-small-2503",
+            model : model,
             temperature : 0.1,
             safePrompt : true,
             stream : false,
@@ -21,6 +77,10 @@ export async function mistralTextGeneration(wwclient : Client, message : Message
                 type : "json_object"
             },
             messages : [
+                {
+                    role : "system",
+                    content : "your are a ai assistance",
+                },
                 {
                     role : "user",
                     content : prompt
@@ -30,11 +90,12 @@ export async function mistralTextGeneration(wwclient : Client, message : Message
     )
 
     //@ts-ignore
-    if (response.choices == undefined || response.choices[0].FinishReason == FinishReason.Error) {
+    if (response.choices == undefined || response.choices.length == 0 || response.choices[0].FinishReason == FinishReason.Error) {
         return await wwclient.sendMessage(message.from, "Mistral Error")
     }
 
     const responseText : string | Array<ContentChunk> | null | undefined = response.choices[0].message.content
+
     if (typeof responseText == undefined || typeof responseText == null ) {
         return await wwclient.sendMessage(message.from, "Mistral Error")
     }

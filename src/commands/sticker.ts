@@ -26,7 +26,7 @@ async function sticker(wwclient : Client, message : Message) : Promise<void | Me
     let media : MessageMedia = await target.downloadMedia()
 
     return await message.reply(
-        media,
+        new MessageMedia(media.mimetype, media.data),
         undefined,
         {
             //@ts-ignore

@@ -1274,7 +1274,7 @@ canvacord@^6.0.2:
 
 canvas@^3.1.0:
   version "3.1.0"
-  resolved "https://registry.npmjs.org/canvas/-/canvas-3.1.0.tgz"
+  resolved "https://registry.yarnpkg.com/canvas/-/canvas-3.1.0.tgz#6cdf094b859fef8e39b0e2c386728a376f1727b2"
   integrity sha512-tTj3CqqukVJ9NgSahykNwtGda7V33VLObwrHfzT0vqJXu7J4d4C/7kQQW3fOEGDfZZoILPut5H00gOjyttPGyg==
   dependencies:
     node-addon-api "^7.0.0"
