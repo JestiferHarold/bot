@@ -9,6 +9,6 @@ export async function getDeletedMessage(message : Message, chats : Array<Revoked
             await chat.deletedMessage(message)
         }
     }
-    
+    //Don't drink while you do this or don't do this while you are drunk plz
     return
 }

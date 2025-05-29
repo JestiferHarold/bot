@@ -1,7 +1,7 @@
 import { Chat, Client, Contact, Message } from "whatsapp-web.js";
 
 /*
-    @Deprecated (More like I have no idea what I did here)
+    @Deprecated (More like I have no idea what I did here) :: what the fuck did I even do here?
 */
 
 export class MutedUser{
@@ -48,6 +48,17 @@ export class MutedUser{
 
             return saves
     }
+
+    public async muteUserById(ids: string | string[]) {
+       for (let id of ids) {
+            let index: number | undefined = this.blockedUsers?.indexOf(id)
+            if (index !== -1) {
+                //@ts-ignore
+                // this.blockedUsers?.splice(index, 1)
+                this.blockedUsers?.push(id)
+            }
+       }
+    } 
 
     public async deleteMessage(message : Message) {
         const _serialized : string = (await message.getContact()).id._serialized

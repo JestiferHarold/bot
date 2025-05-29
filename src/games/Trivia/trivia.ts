@@ -9,8 +9,8 @@ let trivias : Array<{
     difficulty : string,
     category : string,
     question : string,
-    
 }> = new Array()
+
 let URL : string = "https://opentdb.com/api.php"
 
 export async function PlaceHolder(wwclient : Client, message : Message) {
@@ -54,7 +54,7 @@ export async function PlaceHolder(wwclient : Client, message : Message) {
 
     if (response.response_code == 0) {
         response = response.results
-        
+        return await wwclient.sendMessage(message.from, response)
     }
 
     else if (response.response_code == 1) {

@@ -14,7 +14,7 @@ export async function createGroupChat(wwclient : Client, message : Message) : Pr
     let name : string;
     let digit : RegExp = /\d/
 
-    console.log("here")
+
     if (participants.length != 0 && digit.test(message.body[(message.body.indexOf("@") + 1)])) {
         console.log("here too")
         name = message.body.slice(2, message.body.indexOf("@"))

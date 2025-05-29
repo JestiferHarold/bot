@@ -1,7 +1,7 @@
 import { Mistral } from "@mistralai/mistralai";
 import { ChatCompletionResponse, ContentChunk, FinishReason } from "@mistralai/mistralai/models/components";
 import { Client, Message } from "whatsapp-web.js";
-import { MistralAIModels } from "../types/mistralmodels";
+import { MistralAIModels } from "../types/AiTypes";
 
 const MistralClient : Mistral = new Mistral(
     {

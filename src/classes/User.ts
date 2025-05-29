@@ -4,8 +4,8 @@ export class SavedContact {
     contact_serialized : string
     cCounter : number
 
-    public constructor(contact : string) {
-        this.cCounter = 0
+    public constructor(contact : string, counter: number | undefined) {
+        this.cCounter = counter || 0
         this.contact_serialized = contact
     }
 

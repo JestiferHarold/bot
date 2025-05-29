@@ -2,7 +2,7 @@ import { Chat, Client, Contact, Message } from "whatsapp-web.js";
 
 
 //deletes the messages sent by a single person in a chat
-async function muteUser(wwclient : Client, message : Message, saves : any) {
+export async function blockUserMessages(wwclient : Client, message : Message, saves : any) {
     let chat : Chat | string = await message.getChat()
     
     if (!chat.isGroup) {

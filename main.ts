@@ -2,7 +2,6 @@ import { Chat, ChatTypes, Client, Contact, LocalAuth, MessageMedia } from 'whats
 import qrcode from 'qrcode-terminal' //Importing error man fuck tsc, just import the function, don't default
 import { QrcodeOptions } from 'ts-qrcode-terminal/types/types'
 import { getDeletedMessage } from './src/client/getrevokedmessage'
-import { createGroupChat } from './src/commands/creategroup'
 import sticker from './src/commands/sticker'
 import { setClientPicture } from './src/client/profilepicture'
 import { crackAJoke } from './src/jokes/jokes'
@@ -11,7 +10,6 @@ import { PlaceHolder } from './src/games/Trivia/trivia'
 import { RevokedMessage } from './src/classes/RevokedMessage'
 import { SavedContact } from './src/classes/User'
 import { MutedUser } from './src/classes/BlockedUsers'
-import { Sterlizing } from './src/types/sterlized'
 import HitlerlifyAvatar from './src/image/hitler'
 
 //imp 
@@ -30,7 +28,14 @@ import { convertToPDF } from './src/image/pdf'
 import { textToSpeech } from './src/commands/tts'
 import { CAAS } from './src/Animals/cats/catasaservice'
 import { memes } from './src/jokes/imgflipmemes'
+import { askOllama } from './src/Ai/ollama'
+import Pouch from "pouchdb"
+import { O } from 'ollama/dist/shared/ollama.e009de91'
+import { Database } from './src/types/sterlized'
+import doc, { save } from 'pdfkit'
+import { blockUserMessages } from './src/client/muteuser'
 
+const database = new Pouch("Saves")
 
 const wwclient : Client = new Client(
     {
@@ -46,12 +51,9 @@ const wwclient : Client = new Client(
     }
 )
 
-let chats : any | Array<Chat> | Array<RevokedMessage>
-let revokedChats : Array<RevokedMessage> = new Array() 
-let mycontacts : Array<SavedContact> = new Array()
-let cmds : Array<string> = new Array()
-let response
-let groupsMuted : Array< MutedUser > = new Array()
+let deletedMessage :Array<RevokedMessage> = new Array()
+let Groups = new Array()
+let Contacts = new Array()
 
 wwclient.on('qr', qr => {
     qrcode.generate(
@@ -66,88 +68,65 @@ wwclient.on("auth_failure", () => {
     console.log("Authentication failure")
 })
 
-wwclient.initialize()
+wwclient.on("ready", async () => {
 
-wwclient.on("message", async (message) => {
-    if (message.body.startsWith(",tts")) {
-        await textToSpeech(wwclient, message)
-    }
-    
-    if (message.body.startsWith(",meme")) {
-        await memes(wwclient, message)
+    let response
+    try {
+
+        response = await database.get("Saves")
+        //@ts-ignore
+        let document1 = response.doc
+        for (let chat of document1.BlockedUsers) {
+            Groups.push(
+                new MutedUser(
+                    chat.groupId,
+                    true
+                )
+            )
+            Groups.at(-1).muteUserById(
+                chat.users
+            )
+            deletedMessage.push(
+                new RevokedMessage(chat.groupId, true)
+            )
+        }
+        
+        for (let contact of document1.MyContacts) {
+            Contacts.push(
+                new SavedContact(contact.contact_serialized, 0)
+            )
+        }
+
+    } catch (err) {
+        let chats: Array<Chat> = await wwclient.getChats()
+        let saves: Database = {
+            BlockedUsers: chats.filter(element => element.isGroup).map(
+                    (element: Chat) => {
+                        return {
+                            groupId: element.id._serialized,
+                            users: new Array()
+                        }
+                    }
+                ),
+            MyContacts: chats.map(element => {return {contact_serialized: element.id._serialized, cCounter: 0}})
+        }
+
+        database.put(
+            {
+                _id : "Saves",
+                doc: saves
+            }
+        )
+
+        Groups.push(
+            saves.BlockedUsers.filter
+        )
     }
 
-    if (message.body.startsWith(",sticker")) {
-        await sticker(wwclient, message)
-    }
+    console.log("started")
 })
 
-wwclient.on("message", async (message) => {
-    if (message.body.startsWith(",mis")) {
-        await mistralTextGeneration(wwclient, message)
-    }
-}) 
-
-// wwclient.on('ready', async () => {
-
-//     response : JSON = await fetch("./saves.json").then(parsedjson => parsedjson.json()).catch(error => console.log("Saves error"))
-
-//     chats = await wwclient.getChats()
-    
-//     let objects : Sterlizing = {
-//         BlockedUsers : [],
-//         MyContacts : []
-//     }
-
-//     if (response == undefined) {
-//         for (let chat of chats) {
-
-//             if (chat.isGroup) {
-//                 const what = new MutedUser(chat.id._serialized, true)
-
-//                 groupsMuted.push(what)
-//                 objects.BlockedUsers.push(
-//                     {
-//                         groupId : chat.id._serialized,
-//                         isGroup : true
-//                     }
-//                 )
-//                 revokedChats.push(new RevokedMessage(chat.id._serialized, chat.isGroup))
-//             }
-            
-//         }
-
-//         for (let contact of await wwclient.getContacts()) {
-//             if (contact.isMyContact && !contact.isBlocked && !contact.isBusiness && !contact.isEnterprise && !contact.isGroup) {
-//                 const asd = new SavedContact(contact.id._serialized)
-//                 mycontacts.push(asd)
-//                 objects.MyContacts.push(
-//                     {
-//                         contact_serialized : contact.id._serialized,
-//                         cCounter : 0
-//                     }
-//                 )
-//             }
-//         } 
-//     }
-
-//     else {
-//         //@ts-ignore
-//         for (let chat in response.BlockedUsers) {
-            
-//         }
-//     }
-    
-
-    
-
-// // ("saves.json", objects.toString(), (error) => {
-// //         if (error) throw error;
-// //     })
-
-// //     console.log("Client started")
-
-// })
+wwclient.initialize()
 
 wwclient.on('ready', () => {console.log("started")})
 
@@ -156,23 +135,26 @@ wwclient.on('message_revoke_everyone', async (after, before) => {
     let chat : Chat | undefined = await before?.getChat()
     let contact : Contact | undefined = await before?.getContact()
     chat = chat == undefined ? await after.getChat() : chat
-    let media : MessageMedia | null
+    let data = undefined, mimetype = undefined
     
     if (before?.hasMedia) {
-        media = await before.downloadMedia()
-        console.log(media)
-    } else {
-        media = null
-    }
+        //@ts-ignore
+        data = before._data.body
+        //@ts-ignore
+        mimetype = before._data.mimetype || "image/jpeg"
 
-    for (let num : number = 0; num < chats.length; num ++) {
-        if (chats[num].chat == chat.id._serialized) {
-            chats[num].setMessage(
+        console.log(await before.downloadMedia())
+    } 
+
+    for (let num : number = 0; num < deletedMessage.length; num ++) {
+        if (deletedMessage[num].chat == chat.id._serialized) {
+            deletedMessage[num].setMessage(
                 before?.type,
                 //@ts-expect-error
                 await contact.getFormattedNumber(),
                 before?.body,
-                media,
+                data,
+                mimetype,
                 before?.isForwarded,
                 before?.forwardingScore,
                 before?.to,
@@ -184,24 +166,26 @@ wwclient.on('message_revoke_everyone', async (after, before) => {
     }
 })
 
-// wwclient.on('message', async (message) => {
-//     switch (message.body.split(" ")[0].toLowerCase()) {
-//         case ",s":
-//             await getDeletedMessage(message, chats)
-//             break
-//         case ",cg":
-//             await createGroupChat(wwclient, message)
-//             break
-//         case ",sticker":
-//             await sticker(wwclient, message)
-//             break
-//         case ",pp":
-//             await setClientPicture(wwclient, message)
-//             break
-//         case ",block":
-//             break
-//     }
-// })
+wwclient.on('message', async (message) => {
+    if (message.body.startsWith(",block")) {
+        // await blockUserMessages(wwclient, message, save)
+    }
+    switch (message.body.split(" ")[0].toLowerCase()) {
+        case ",s":
+            await getDeletedMessage(message, deletedMessage)
+            break
+        case ",cg":
+            break
+        case ",sticker":
+            await sticker(wwclient, message)
+            break
+        case ",pp":
+            await setClientPicture(wwclient, message)
+            break
+        case ",block":
+            break
+    }
+})
 
 // wwclient.on('message', async (message) => {
 
@@ -230,7 +214,7 @@ wwclient.on('message_revoke_everyone', async (after, before) => {
 
 wwclient.on("message", async (message) => {
     if (message.body.slice(0,4) == ",gen") {
-        await mistralTextGeneration(wwclient, message)
+        // await mistralTextGeneration(wwclient, message)
     }
 
     if (message.body.slice(0,4) == ",img") {

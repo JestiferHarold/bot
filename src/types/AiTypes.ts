@@ -7,3 +7,10 @@ export enum MistralAIModels {
     Codestral = "open-codestral-mamba"
     
 }
+
+export enum OlammaAIModels {
+
+    Deepseek_R_1 = "deepseek-r1",
+    Granite_3_2_vision = "granite3.2-vision"
+
+}

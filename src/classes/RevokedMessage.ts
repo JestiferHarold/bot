@@ -4,7 +4,8 @@ export class RevokedMessage{
     
     type ?: MessageTypes
     body ?: string
-    media ?: MessageMedia | null
+    mediaMimeType ?: string
+    mediaData ?: string
     contactId : string | number |undefined
     chat : string
     group : boolean
@@ -19,11 +20,12 @@ export class RevokedMessage{
         this.group = isGroup
     }
 
-    public async setMessage(type : MessageTypes, contactId : string | number | undefined,  body : string = "", media : MessageMedia | null , forwarded : boolean, forwardingScore : number, to : string | null = null, messageUpTime : number, messageDownTime : number) : Promise<void> {
+    public async setMessage(type : MessageTypes | undefined, contactId : string | number | undefined,  body : string = "", mediaData : string | undefined, mediaMimeType: string | undefined , forwarded : boolean | undefined, forwardingScore : number | undefined, to : string | null = null, messageUpTime : number | undefined, messageDownTime : number | undefined) : Promise<void> {
         this.type = type
         this.contactId = contactId
         this.body = body
-        this.media = media
+        this.mediaData = mediaData
+        this.mediaMimeType = mediaMimeType
         this.forwarded = forwarded
         this.forwardingScore = forwardingScore
         this.to = to
@@ -32,7 +34,10 @@ export class RevokedMessage{
     }
 
     //Add the deleted seconds ago := added ;)
-    public async deletedMessage(message : Message) : Promise<Message> {
+    public async deletedMessage(message : Message) : Promise<Message | void> {
+        if (this.body == undefined && this.to == undefined) {
+            return 
+        }
         const customMessage : string = "Author : " +
                                  this.contactId +
                                  "\nMessage Type : " + 
@@ -47,11 +52,22 @@ export class RevokedMessage{
                                  //@ts-expect-error
                                  (this.forwarded ? `\nForwarded ${this.forwardingScore} ${this.forwardingScore > 1 ? "times" : "time"}` : "")
                                  
-            return await message.reply(
+            if (this.type == MessageTypes.TEXT) {
+                return await message.reply(
                 customMessage,
                 undefined, {
                     linkPreview : false,
                     sendAudioAsVoice : true,
+                }
+                )
+            } 
+
+            return await message.reply(
+                //@ts-ignore
+                new MessageMedia(this.mediaMimeType, this.mediaData),
+                undefined, 
+                {
+                    caption: customMessage
                 }
             )
     }
