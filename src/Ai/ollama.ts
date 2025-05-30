@@ -10,7 +10,7 @@ const model: Ollama = new Ollama()
 
 let currentModelInUse: OlammaAIModels = OlammaAIModels.Deepseek_R_1
 
-export function chooseModel(message: Message) {
+export async function chooseModel(message: Message) {
     let flag: number | string = message.body.split(" ")[1]
     
     if (!(/\d/.test(flag))) {
@@ -20,23 +20,20 @@ export function chooseModel(message: Message) {
     flag = parseInt(flag)
 
     if (flag < 0 || flag > availableModels.length) {
-        return
+        return await message.react("x")
     }
 
     currentModelInUse = availableModels[flag]
-
+    return await message.reply("Now using " + currentModelInUse)
 }
 
 export async function askOllama(wwclient: Client, message: Message) {
     if (message.body.toLowerCase().split(" ")[1].startsWith("--models")) {
         return await message.reply(
             "Models Available\n" +
-            availableModels.forEach(
-                element => {
-                    `\n${element}`
-                }
+                availableModels
             )
-        )
+        
     } 
 
     let media: null | MessageMedia = null

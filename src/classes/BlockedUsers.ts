@@ -1,61 +1,36 @@
 import { Chat, Client, Contact, Message } from "whatsapp-web.js";
 
 /*
-    @Deprecated (More like I have no idea what I did here) :: what the fuck did I even do here?
+    @Deprecated (More like I have no idea what I did here) :: what the fuck did I even do here? :: some how i did it
 */
 
 export class MutedUser{
 
     //this is for chat where teh users are muted, a user can be muted in one chat but he is free to message in another
-    chat : Chat
     isGroup : boolean
-    blockedUsers ?: Array<string>
+    blockedUsers : Array<string>
+    chat_serialized: string
 
-    constructor(chat : Chat, isGroup : boolean) {
-        this.chat = chat
+    constructor(chat : string, isGroup : boolean) {
         this.isGroup = isGroup
+        this.blockedUsers = new Array()
+        this.chat_serialized = chat
     }
 
-    public async muteUser(message : Message, saves : any) {
+    public muteUser(contactId : string) {
 
-            let chat : Chat | string = await message.getChat()
-            chat = chat.id._serialized
-            const mentions : Array<Contact>  = await message.getMentions()
-
-            if (mentions.length == 0) {
-                return
-            }
-
-            let contactIDs : Array<string> = new Array()
-
-            for (let mention of mentions) {
-                contactIDs.push(mention.id._serialized)
-            }
-
-            for (let i = 0; i < saves.BlockedUsers.length; i ++) {
-                if (saves.BlockedUsers[i].chatId == chat) {
-                    contactIDs.forEach(element => {
-                        saves.BlockedUsers[i].users.includes(element) ? null : saves.BlockedUsers[i].users.push(element)
-                    })
-                }
-            }
-
-            for (const contactID of contactIDs) {
-                if (!this.blockedUsers?.includes(contactID)) {
-                    this.blockedUsers?.push(contactID)
-                }
-            }
-
-            return saves
+        if (!this.blockedUsers.includes(contactId)) {
+            this.blockedUsers.push(contactId)
+        }
     }
 
-    public async muteUserById(ids: string | string[]) {
+    public muteUserById(ids: string | string[]) {
        for (let id of ids) {
-            let index: number | undefined = this.blockedUsers?.indexOf(id)
-            if (index !== -1) {
+            let index: number = this.blockedUsers.indexOf(id)
+            if (true) {
                 //@ts-ignore
                 // this.blockedUsers?.splice(index, 1)
-                this.blockedUsers?.push(id)
+                this.blockedUsers.push(id)
             }
        }
     } 
@@ -67,16 +42,9 @@ export class MutedUser{
         }
     }
 
-    public async unmuteUser(message : Message) {
-        const mentions : Array<Contact> = await message.getMentions()
+    public async unmuteUser(mentions: string[]) {
         
-        if (mentions.length == 0) {
-            return
-        }
-        
-        for (const mention of mentions) {
-            const _serialized : string = mention.id._serialized
-            
+        for (const _serialized of mentions) {
             if (this.blockedUsers?.includes(_serialized)) {
                 this.blockedUsers = this.blockedUsers.filter(
                     item => {

@@ -6,7 +6,7 @@ export const Command : string = ""
 export const Description : string = ""
 export const AdminOnly : boolean = true
 
-async function ditherEffect(wwclient : Client, message : Message) {
+export async function pixelate(wwclient : Client, message : Message) {
     let chat : Chat = await message.getChat()
     let mentions : Array<Contact> = await message.getMentions()
     let pixelateIndex : number = 10
@@ -43,5 +43,3 @@ async function ditherEffect(wwclient : Client, message : Message) {
     return await message.reply(media)
     
 }
-
-export default ditherEffect

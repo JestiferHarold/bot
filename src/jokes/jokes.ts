@@ -1,6 +1,6 @@
 import { Client, Message, Chat } from "whatsapp-web.js";
 
-export async function crackAJoke(message : Message, wwclient : Client) {
+export async function crackAJoke( wwclient : Client, message : Message) {
     let url : string = "https://v2.jokeapi.dev/joke/"
     let timeout : number = 0
     

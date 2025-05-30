@@ -31,24 +31,41 @@ const chat : ChatSession = model.startChat(
                     }
                 ]
             }
-        ]
+        ],
+        
     }
 )
 
 export async function geminiChat(wwclient : Client,message : Message) {
 
-    const prompt : string = message.body.split(" ").slice(1).join("")
-    const response : Promise<GenerateContentResult> = chat.sendMessage(prompt)
-    const responseText : string = (await response).response.text()
+    let media : MessageMedia | undefined = undefined
+
+    if (!message.hasMedia) {
+        if(!message.hasQuotedMsg) {
+        } else {
+            message = await message.getQuotedMessage()
+            if (message.hasMedia) {
+                media = await message.downloadMedia()
+            }
+        }
+    } else {
+        media = await message.downloadMedia()
+    }
+
+    const text : string = message.body.split(" ").slice(1).join("")
+
+    const prompt =  media != undefined ? ([{text: text}, {inlineData: {mimeType: media.mimetype, data: media.data}}]) : [{text: text}]
+
+    const response : GenerateContentResult = await chat.sendMessage(prompt)
+    const responseText : string = response.response.text()
     return await message.reply(responseText ? responseText : "error generating")
 
 }
 
 //I don't know why I'm dumb
 
-export async function geminiChatForImages(wwclient : Client, message : Message) {
+export async function immediateChat(wwclient : Client, message : Message) {
 
-    console.log(process.env.GEMINI_API_KEY)
     const prompt : string = message.body.split(" ").slice(1).join("")
     let media : MessageMedia
 
