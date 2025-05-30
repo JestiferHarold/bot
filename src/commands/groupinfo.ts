@@ -5,7 +5,7 @@ export const Command : string = ""
 export const Description : string = ""
 export const AdminOnly : boolean = true
 
-async function changeMessageSettings(wwclient : Client, message : Message, booleanValue : boolean) : Promise<Message> {
+export async function changeMessageSettings(wwclient : Client, message : Message, booleanValue : boolean) : Promise<Message> {
     const chat : Chat = await message.getChat()
     //@ts-ignore
     const settings : boolean = await chat.setInfoAdminsOnly(booleanValue)

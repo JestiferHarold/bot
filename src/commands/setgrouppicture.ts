@@ -5,7 +5,7 @@ export const Command : string = ""
 export const Description : string = ""
 export const AdminOnly : boolean = true
 
-async function setGroupPicture(wwclient : Client, message : Message) : Promise<boolean | void>{
+export async function setGroupPicture(wwclient : Client, message : Message) : Promise<boolean | void>{
     const chat : Chat = await message.getChat()
 
     if (!chat.isGroup) {

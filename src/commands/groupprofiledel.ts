@@ -5,7 +5,7 @@ export const Command : string = ""
 export const Description : string = ""
 export const AdminOnly : boolean = true
 
-async function deleteProfilePicture(wwclient : Client, message : Message) : Promise<void | boolean>{
+export async function deleteGroupProfilePicture(wwclient : Client, message : Message) : Promise<void | boolean>{
     const chat : Chat = await message.getChat()
 
     if (!chat.isGroup) {

@@ -14,9 +14,9 @@ export async function Apod(wwclient : Client, message : Message) {
     let pictureURL : string = response.hdurl
     let title : string = response.title
 
-    return await wwclient.sendMessage(
-        message.from,
+    return await message.reply(
         await MessageMedia.fromUrl(pictureURL),
+        message.from,
         {
             caption : "```Astronomical Picture Of The Day\n\n" +
                       title +

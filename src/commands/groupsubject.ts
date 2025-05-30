@@ -5,7 +5,7 @@ export const Command : string = ""
 export const Description : string = ""
 export const AdminOnly : boolean = true
 
-async function groupName(wwclient : Client, message : Message) : Promise<boolean | void> {
+export async function groupName(wwclient : Client, message : Message) : Promise<boolean | void> {
 
     const split : Array<string> = message.body.split(" ")
 

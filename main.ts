@@ -58,8 +58,21 @@ import clearMessagesFromClient from "./src/commands/clear"
 import { createGroupChat } from "./src/commands/creategroup"
 import timesForwarded from "./src/commands/forwarded"
 import { RetrieveFileOut$inboundSchema } from "@mistralai/mistralai/models/components"
-
-
+import { groupDescription } from "./src/commands/groupdescription"
+import { changeMessageSettings } from "./src/commands/groupinfo"
+import { deleteGroupProfilePicture } from "./src/commands/groupprofiledel"
+import { groupName } from "./src/commands/groupsubject"
+import getInviteCode from "./src/commands/invitecode"
+import susLinks from "./src/commands/link"
+import muteChat from "./src/commands/mute"
+import getChatName from "./src/commands/name"
+import pinMessage from "./src/commands/pin"
+import createPoll from "./src/commands/poll"
+import references from "./src/commands/references"
+import revokeGroupInvites from "./src/commands/revokeinvites"
+import { setGroupPicture } from "./src/commands/setgrouppicture"
+import unmute from "./src/commands/umute"
+import unpin from "./src/commands/unpin"
 
 const wwclient : Client = new Client(
     {
@@ -232,13 +245,98 @@ wwclient.on('message', async (message) => {
         case ",f":
             await timesForwarded(message)
             break
-        // case ",gi":
+        case ",gd":
+            if (!(contact == process.env.PHONE_NUMBER_SERIALIZED)) {
+                return
+            }
+            await groupDescription(wwclient, message)
+            break
+        case ",gi":
+            if (!(contact == process.env.PHONE_NUMBER_SERIALIZED)) {
+                return
+            }
 
-        // case ",sticker":
-        //     await sticker(wwclient, message)
-        //     break
-        // case ",profc":
-        //     await setClientPicture(wwclient, message)
-        //     break
+            await changeMessageSettings(wwclient, message, message.body.toLowerCase().split(" ").includes("--admins") || message.body.toLowerCase().split(" ").includes("-a"))
+            break
+        case ",dpg":
+            if (!(contact == process.env.PHONE_NUMBER_SERIALIZED)) {
+                return
+            }
+
+            await deleteGroupProfilePicture(wwclient, message)
+            break
+        case ",sgn":
+            if (!(contact == process.env.PHONE_NUMBER_SERIALIZED)) {
+                return
+            }
+
+            await groupName(wwclient, message)
+            break
+        case ",inc":
+            await getInviteCode(message)
+            break
+        case ",gms":
+            if (!(contact == process.env.PHONE_NUMBER_SERIALIZED)) {
+                return
+            }
+            await changeMessageSettings(wwclient, message,  message.body.toLowerCase().split(" ").includes("--admins") || message.body.toLowerCase().split(" ").includes("-a"))
+            break
+        case ",links":
+            await susLinks(wwclient, message)
+            break
+        case ",mute":
+            if (!(contact == process.env.PHONE_NUMBER_SERIALIZED)) {
+                return
+            }
+            await muteChat(message)
+            break
+        case ",n":
+            await getChatName(wwclient, message)
+            break
+        case ",pin":
+            await pinMessage(message)
+            break
+        case ",poll":
+            await createPoll(wwclient, message)
+            break
+        case ",refs":
+            await references(wwclient, message)
+            break
+        case ",reiv":
+            if (!(contact == process.env.PHONE_NUMBER_SERIALIZED)) {
+                return
+            }
+            
+            await revokeGroupInvites(wwclient, message)
+            break
+        case ",ss":
+            if (!(contact == process.env.PHONE_NUMBER_SERIALIZED)) {
+                return
+            }
+
+            await ScreenShot(wwclient, message)
+            break
+        case ",sgp":
+            if (!(contact == process.env.PHONE_NUMBER_SERIALIZED)) {
+                return
+            }
+            
+            await setGroupPicture(wwclient, message)
+            break
+        case ",s":
+            await sticker(wwclient, message)
+            break
+        case ",unmute":
+            if (!(contact == process.env.PHONE_NUMBER_SERIALIZED)) {
+                return
+            }
+
+            await unmute(message)
+            break
+        case ",unpin":
+            await unpin(message)
+            break
+        default:
+            return
     }
 })
