@@ -118,6 +118,7 @@ wwclient.on('message_revoke_everyone', async (after, before) => {
     await saveDeletedMessage(wwclient, before, after)
 })
 
+try {
 wwclient.on('message', async (message) => {
     if (await deleteBlockedUsersMessage(message)) {
         return
@@ -339,4 +340,4 @@ wwclient.on('message', async (message) => {
         default:
             return
     }
-})
+})} catch (error) {}
