@@ -7,6 +7,10 @@ import { Database } from "../types/sterlized"
 
 export async function StartClient(wwclient: Client) {
     let response
+    wwclient.setAutoDownloadAudio(true)
+    wwclient.setAutoDownloadDocuments(true)
+    wwclient.setAutoDownloadPhotos(true)
+    wwclient.setAutoDownloadVideos(true)
     try {
 
         response = await database.get("Saves")

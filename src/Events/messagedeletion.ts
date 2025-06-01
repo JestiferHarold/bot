@@ -8,12 +8,12 @@ export async function saveDeletedMessage(wwclient: Client, before: Message | nul
     chat = chat == undefined ? await after.getChat() : chat
     let data = undefined, mimetype = undefined
     
-    if (before?.hasMedia) {
+    if (!before?.hasMedia) {
         //@ts-ignore
         data = before._data.body
         //@ts-ignore
         mimetype = before._data.mimetype || "image/jpeg"
-    } 
+    }
 
     for (let num : number = 0; num < deletedMessage.length; num ++) {
         if (deletedMessage[num].chat == chat.id._serialized) {

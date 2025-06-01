@@ -61,7 +61,7 @@ export class RevokedMessage{
                 }
                 )
             } 
-
+            
             return await message.reply(
                 //@ts-ignore
                 new MessageMedia(this.mediaMimeType, this.mediaData),
