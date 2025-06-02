@@ -45,7 +45,6 @@ RUN mkdir -p /usr/src/chromium && \
 
 WORKDIR /app
 
-RUN yarn add typescript
 RUN yarn add ts-node
 RUN yarn add https-proxy-agent
 

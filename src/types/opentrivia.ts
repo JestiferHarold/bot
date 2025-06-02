@@ -8,8 +8,8 @@ interface ResponseObject {
 export enum Type {
 
     Any = "",
-    MultpleChoice = "&type=multiple",
-    BinaryChoice = "&type=boolean"
+    MultpleChoice = "multiple",
+    BinaryChoice = "boolean"
     
 }
 
@@ -59,22 +59,22 @@ export const OpenTBResponseObjects : Record<string, ResponseObject> = {
     },
     NoResults : {
         responseCode : 1,
-        Error : new Error("Could not return results")
+        Error : new Error("Could not return results, response code 1 :: no results")
     },
     InvalidParameter : {
         responseCode : 2,
-        Error : new Error("Arguments passed to the end points are not vaild")
+        Error : new Error("Arguments passed to the end points are not vaild, response code 2 :: Invalid Parameter")
     },
     TokenNotFound : {
         responseCode : 3,
-        Error : new Error("Session Token does not exist")
+        Error : new Error("Session Token does not exist, response code 3 :: Token Not Found")
     },
     TokenEmpty : {
         responseCode : 4,
-        Error : new Error("All the question in this category has been completed, Reset the token")
+        Error : new Error("All the question in this category has been completed, Reset the token. Response code 4 :: token empty")
     },
     RateLimit : {
         responseCode : 5,
-        Error : new Error("Timeout error, each Ip can access the api every 5 seconds")
+        Error : new Error("Timeout error, each Ip can access the api every 5 seconds, response code 5 :: rate limit reached")
     }
 } 

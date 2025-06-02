@@ -1,9 +1,9 @@
-import { Client, Message } from "whatsapp-web.js";
+import { Message } from "whatsapp-web.js";
 import { deleteBlockedUsersMessage } from "./deletemessages";
 import { clientShutdown } from "../client/shutdown";
 import { BlockUser, UnBlockUser } from "./revokeusers";
 import { getDeletedMessage } from "../client/getrevokedmessage";
-import { deletedMessage, wwclient } from "../../main";
+import { deletedMessage, startTime, wwclient } from "../../main";
 import destroyClient from "../client/destroy";
 import unpin from "../commands/unpin";
 import unmute from "../commands/umute";
@@ -50,6 +50,7 @@ import { CAAS } from "../Animals/cats/catasaservice";
 import { askOllama, chooseModel } from "../Ai/ollama";
 import { availableModels, mistralTextGeneration, modelSelector } from "../Ai/mistral";
 import { geminiChat, immediateChat } from "../Ai/gemini";
+import { PlaceHolder } from "../games/Trivia/trivia";
 
 
 export const MessageEvent = async (message: Message ) => {
@@ -281,6 +282,10 @@ export const MessageEvent = async (message: Message ) => {
                 return
             }
            clientShutdown(wwclient, message)
+        case ",status":
+            await message.reply(`Online\nUptime = ${Date.now() - startTime}`)
+        case ",trivia":
+            await PlaceHolder(message)
         default:
             return
         
