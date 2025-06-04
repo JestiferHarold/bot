@@ -2,7 +2,7 @@ import { Client, Message, MessageTypes } from "whatsapp-web.js";
 import { MessageEvent } from "../Events/messageevent";
 import { wwclient } from "../../main";
 
-export async function clientShutdown(wwclient: Client, message: Message) {
+export async function clientShutdown(message: Message) {
     
     wwclient.removeListener("message", MessageEvent)
 

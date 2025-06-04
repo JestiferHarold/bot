@@ -16,6 +16,7 @@ import Pouch from "pouchdb"
 import { saveDeletedMessage } from "./src/Events/messagedeletion"
 import { StartClient } from "./src/Events/startup"
 import { MessageEvent } from "./src/Events/messageevent"
+import { addChatToDatabase } from "./src/Events/groupdatabase"
 
 export const wwclient : Client = new Client(
     {
@@ -61,6 +62,11 @@ wwclient.initialize()
 
 wwclient.on('message_revoke_everyone', async (after, before) => {
     await saveDeletedMessage(wwclient, before, after)
+})
+
+wwclient.on("group_join", async (notification) => {
+    console.log("working")
+    await addChatToDatabase(notification)
 })
 
 try {wwclient.on('message', MessageEvent)} catch (error) {}

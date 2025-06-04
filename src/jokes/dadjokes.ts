@@ -18,6 +18,7 @@ export async function dadJoke(wwclient : Client, message : Message) {
     if (responseJson == undefined) {
         return
     }
+    console.log(responseJson)
 
     if (message.body.toLowerCase().includes("--image") || message.body.toLowerCase().includes("-i")) {
         URL += `j/${responseJson.id}.png`

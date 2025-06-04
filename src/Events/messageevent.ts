@@ -51,6 +51,7 @@ import { askOllama, chooseModel } from "../Ai/ollama";
 import { availableModels, mistralTextGeneration, modelSelector } from "../Ai/mistral";
 import { geminiChat, immediateChat } from "../Ai/gemini";
 import { PlaceHolder } from "../games/Trivia/trivia";
+import { memoryGame } from "../games/timerecord/tr";
 
 
 export const MessageEvent = async (message: Message ) => {
@@ -281,11 +282,18 @@ export const MessageEvent = async (message: Message ) => {
             if (!(contact == process.env.PHONE_NUMBER_SERIALIZED)) {
                 return
             }
-           clientShutdown(wwclient, message)
+           await clientShutdown(message)
+           break
         case ",status":
             await message.reply(`Online\nUptime = ${Date.now() - startTime}`)
+            break
         case ",trivia":
             await PlaceHolder(message)
+            console.log('asd')
+            break
+        case ",test":
+            await memoryGame(message)
+            break
         default:
             return
         
