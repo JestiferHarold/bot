@@ -1,19 +1,19 @@
- import { Chat, Client, Message } from "whatsapp-web.js";
+import { Chat, Client, Message } from "whatsapp-web.js";
 
-export const Name : string = ""
-export const Command : string = ""
-export const Description : string = ""
-export const AdminOnly : boolean = true
+export const Name: string = "";
+export const Command: string = "";
+export const Description: string = "";
+export const AdminOnly: boolean = true;
 
-async function archiveChat(wwclient : Client, message : Message) : Promise<void> {
-        let chat : Chat = await message.getChat()
+async function archiveChat(wwclient: Client, message: Message): Promise<void> {
+  let chat: Chat = await message.getChat();
 
-        if (chat.archived) {
-            return 
-        }
+  if (chat.archived) {
+    return;
+  }
 
-        chat.archive()
-        return message.react("👍")
+  chat.archive();
+  return message.react("👍");
 }
 
-export default archiveChat
+export default archiveChat;

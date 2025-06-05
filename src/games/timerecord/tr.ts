@@ -2,11 +2,12 @@ import { Contact, Message, MessageMedia } from "whatsapp-web.js";
 import { wwclient } from "../../../main";
 import { MessageEvent } from "../../Events/messageevent";
 
-let text: string;
+let text: string | Array<string>;
 let players: Array<{
-  pushName: string, 
-  phoneNumber: number, 
-  _serialized: string
+  pushName: string;
+  phoneNumber: string;
+  _serialized: string;
+  points?: number;
 }> = new Array();
 let chatId: string;
 let media: MessageMedia;
@@ -53,20 +54,25 @@ export async function memoryGame(message: Message) {
 
   wwclient.removeListener("message", MessageEvent);
   wwclient.addListener("message", getPlayers);
-  await wwclient.sendMessage(chatId, "Running game has started, type join to join the game");
+  await wwclient.sendMessage(
+    chatId,
+    "Running game has started, type join to join the game"
+  );
 
-  timer = setTimeout(async () => {
+  setTimeout(async () => {
     wwclient.removeListener("message", getPlayers);
     await sendBody();
-    setTimeout(async () => {
-      wwclient.removeListener("message", endGame);
-      console.log(finalAnswers);
-    }, 300);
-  }, 3000);
+    // setTimeout(async () => {
+    //   wwclient.removeListener("message", endGame);
+    //   console.log(finalAnswers);
+    // }, 30000);
+  }, 30000);
 }
 
 export const getPlayers = async (message: Message) => {
   //have a timer
+
+  console.log(players);
 
   if (!((await message.getChat()).id._serialized == chatId)) {
     return;
@@ -75,15 +81,24 @@ export const getPlayers = async (message: Message) => {
   if (message.body.toLowerCase() == "quit") {
     wwclient.removeListener("message", getPlayers);
     wwclient.addListener("message", MessageEvent);
-    await message.react("asd");
+    return await message.react("asd");
   }
 
   if (message.body.toLowerCase() == "join") {
     let contact: Contact = await message.getContact();
-    if (!players.includes(contact.id._serialized)) {
-      players.push(contact.id._serialized);
-      await message.react("ok");
+
+    for (let player of players) {
+      if (player._serialized == contact.id._serialized) {
+        return;
+      }
     }
+
+    players.push({
+      pushName: contact.pushname,
+      phoneNumber: contact.number,
+      _serialized: contact.id._serialized,
+    });
+    return;
   }
 
   if (message.body.toLowerCase() == "start") {
@@ -97,19 +112,17 @@ export const sendBody = async () => {
     return wwclient.addListener("message", MessageEvent);
   }
 
-  let caption: string = "Players"
+  let caption: string = "```Players\n";
 
   for (let player of players) {
-
+    caption += `\n${player.pushName} : ${player.phoneNumber}`;
   }
 
-  await wwclient.sendMessage(
-    chatId, 
-    media, 
-    {
-      caption: 
-    }
-  );
+  caption += "```";
+
+  await wwclient.sendMessage(chatId, media, {
+    caption: caption,
+  });
   wwclient.addListener("message", endGame);
 };
 
@@ -131,8 +144,15 @@ export const endGame = async (message: Message) => {
     submission: message.body.split(" ").slice(1).join(" "),
     timeStamp: message.timestamp,
   });
+
+  console.log(finalAnswers);
 };
 
 export const giveAName = async () => {
-  
-}
+  //@ts-ignore
+  text = text.split(" ");
+  for (let player of finalAnswers) {
+    let submission = player.submission.split(" ");
+    
+  }
+};

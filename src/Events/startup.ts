@@ -61,6 +61,8 @@ export async function StartClient(wwclient: Client) {
   for (let chat of await wwclient.getChats()) {
     await chat.sendSeen();
   }
+
+  console.log("start");
 }
 
 export const RestartClient = async (wwclient: Client) => StartClient(wwclient);

@@ -52,6 +52,7 @@ import { availableModels, mistralTextGeneration, modelSelector } from "../Ai/mis
 import { geminiChat, immediateChat } from "../Ai/gemini";
 import { PlaceHolder } from "../games/Trivia/trivia";
 import { memoryGame } from "../games/timerecord/tr";
+import { RestartClient } from "./startup";
 
 
 export const MessageEvent = async (message: Message ) => {
@@ -292,7 +293,7 @@ export const MessageEvent = async (message: Message ) => {
             console.log('asd')
             break
         case ",test":
-            await memoryGame(message)
+            await RestartClient(wwclient)
             break
         default:
             return
