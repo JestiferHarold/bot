@@ -56,6 +56,8 @@ wwclient.on("ready", async () => {
     await StartClient(wwclient) // Change the function names 
     
     console.log("started")
+    //@ts-ignore
+    await wwclient.sendMessage(process.env.PHONE_NUMBER_SERIALIZED, "Client started")
 })
 
 wwclient.initialize()
@@ -68,5 +70,5 @@ wwclient.on("group_join", async (notification) => {
     console.log("working")
     await addChatToDatabase(notification)
 })
-
-try {wwclient.on('message', MessageEvent)} catch (error) {}
+ 
+wwclient.on("message", MessageEvent)

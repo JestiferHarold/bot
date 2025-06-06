@@ -13,7 +13,7 @@ let chatId: any
 let guesses: number
 let options: any
 
-export async function PlaceHolder(message : Message) {
+export async function Trivia(message : Message) {
 
     let URL : string = "https://opentdb.com/api.php"
 

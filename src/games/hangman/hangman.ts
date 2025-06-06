@@ -1,38 +1,42 @@
 import { Client, Message, MessageMedia } from "whatsapp-web.js";
 import { retriveWord } from "./components";
-import { wwclient } from "../../../main";
+import { startTime, wwclient } from "../../../main";
 import { MessageEvent } from "../../Events/messageevent";
 
 let word: string | null = null
 let chatId: string
-let split: Array<string>
+let split: Array<string | undefined>
 let guesses: number
 let drawing
 
-async function hangman(message : Message) {
+export async function hangman(message : Message) {
     word = await retriveWord()
-    split = new Array(word.length)
-    let booleanvalues : Array<boolean> = new Array(word.length).fill(false)
+    split = new Array(word.length).fill(undefined)
     chatId = (await message.getChat()).id._serialized
     guesses = 0
-    drawing = drawHangman(split);
+    drawing = await drawHangman(split);
     wwclient.removeListener("message", MessageEvent)
     wwclient.addListener("message", mainLoop);
-    await wwclient.sendMessage(chatId, drawing[0], {caption: drawing[1]}) 
+    //@ts-ignore
+    await wwclient.sendMessage(chatId, drawing.drawing, {caption: drawing.caption}) 
 }
 
 export const mainLoop = async (message: Message) => {    
-    
-    if (!((await message.getChat()).id._serialized == chatId) || (message.body.toLowerCase() == "FORCE QUIT" && (await message.getContact()).id._serialized == process.env.PHONE_NUMBER_SERIALIZED)) {
+
+    if (message.body.toLowerCase() == ",status") {
+        return await message.reply(`\`\`\`Online\n\nUptime = ${Date.now() - startTime}\n\nCurrent Event = ${wwclient.listeners("message")}\`\`\``)
+    }
+
+    if (((await message.getChat()).id._serialized !=  chatId) ) {
         return
     }
     
-    if (message.body.toLowerCase() == "answer" || message.body.toLowerCase() == "quit") {
+    if (message.body.toLowerCase() == "answer" || message.body.toLowerCase() == "quit" || (message.body.toLowerCase() == "FORCE QUIT" && (await message.getContact()).id._serialized == process.env.PHONE_NUMBER_SERIALIZED )|| guesses == 6){
         //@ts-ignore
-       await wwclient.sendMessage(chatId, word);
+        await wwclient.sendMessage(chatId,"correct answer : " + word);
         wwclient.removeListener("message", mainLoop);
         wwclient.addListener("message", MessageEvent);
-        return
+        return await message.react("");
     }
 
     if (message.body.length > 1) {
@@ -43,37 +47,98 @@ export const mainLoop = async (message: Message) => {
         return
     }
 
-    if (word?.split("").includes(message.body) && !(split.includes(message.body))) {
-        let i = 0;
-        for (let j of word) {
-            if (word == message.body) {
-                i ++;
+    if (word?.includes(message.body) && !(split.includes(message.body))) {
+        for (let i = 0; i < word.length; i ++) {
+            if (word[i] == message.body) {
+                split[i] = message.body
             }
         }
 
-        if (i == 1) {
-            split[word.indexOf(message.body)] = message.body
-        } else {
-            let integer: Array<number> = new Array()
-            for (let i = 0; i < split.length; i ++) {
-                if (word[i] == message.body) {
-                    split[i] == message.body
-                }
-            }
-        }
-
-        drawing = drawHangman(split)
-        return await wwclient.sendMessage(chatId,drawing[0], {caption: drawing[1]} )
+        await message.react("👍")
+        drawing = await drawHangman(split)
+        //@ts-ignore
+        return await wwclient.sendMessage(chatId,drawing.drawing, {caption: drawing.caption} )
     }       
 
+    await message.react("👎")
     guesses ++;
+    drawing = await drawHangman(split)
+    //@ts-ignore
+    await wwclient.sendMessage(chatId, drawing.drawing, {caption: drawing.caption})
 }
 
-function drawHangman(words: Array<string>) : {
-    drawing: MessageMedia,
+async function drawHangman(words: Array<string | undefined>) : Promise<{
+    drawing: MessageMedia | string, 
     caption: string
-}{
+} | Client>{
     
-}
+    let caption = ""
+    for (let a of words) {
+        caption += (a == undefined ? " _ " : a)
+    }
 
-// console.log(await hangman())
+    let drawing: string = ""
+
+    if (word == words.join("")) {
+        await wwclient.sendMessage(chatId,"correct answer : " + word);
+        wwclient.removeListener("message", mainLoop);
+        return wwclient.addListener("message", MessageEvent);
+    }
+
+    const HANGMANPICS = [`
+  +---+
+  |   |
+      |
+      |
+      |
+      |
+=========`, `
+  +---+
+  |   |
+  O   |
+      |
+      |
+      |
+=========`, `
+  +---+
+  |   |
+  O   |
+  |   |
+      |
+      |
+=========`,`
+  +---+
+  |   |
+  O   |
+ /|   |
+      |
+      |
+=========`, `
+  +---+
+  |   |
+  O   |
+ /|\  |
+      |
+      |
+=========`, `
+  +---+
+  |   |
+  O   |
+ /|\  |
+ /    |
+      |
+=========`, `
+  +---+
+  |   |
+  O   |
+ /|\  |
+ / \  |
+      |
+=========`
+]
+
+    return {
+        drawing: HANGMANPICS[guesses] + "\n\n" + caption, 
+        caption: caption
+    }
+}

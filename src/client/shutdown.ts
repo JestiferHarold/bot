@@ -13,7 +13,7 @@ export async function clientShutdown(message: Message) {
 
 const shutdownState = async (message: Message) => {
     let contact = await message.getContact()
-    if (message.body == ",restart" && contact.id._serialized == process.env.PHONE_NUMBER_SERIALIZED) {
+    if (message.body == ",on" && contact.id._serialized == process.env.PHONE_NUMBER_SERIALIZED) {
         wwclient.removeListener("message", shutdownState)
         wwclient.addListener("message", MessageEvent)
         await wwclient.sendMessage(message.from, "Restarted")

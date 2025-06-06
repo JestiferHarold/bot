@@ -50,9 +50,10 @@ import { CAAS } from "../Animals/cats/catasaservice";
 import { askOllama, chooseModel } from "../Ai/ollama";
 import { availableModels, mistralTextGeneration, modelSelector } from "../Ai/mistral";
 import { geminiChat, immediateChat } from "../Ai/gemini";
-import { PlaceHolder } from "../games/Trivia/trivia";
 import { memoryGame } from "../games/timerecord/tr";
 import { RestartClient } from "./startup";
+import { hangman } from "../games/hangman/hangman";
+import { Trivia } from "../games/Trivia/trivia";
 
 
 export const MessageEvent = async (message: Message ) => {
@@ -286,14 +287,19 @@ export const MessageEvent = async (message: Message ) => {
            await clientShutdown(message)
            break
         case ",status":
-            await message.reply(`Online\nUptime = ${Date.now() - startTime}`)
+            await message.reply(`\`\`\`Online\n\nUptime = ${Date.now() - startTime}\n\nCurrent Event = ${wwclient.listeners("message")}\`\`\``)
             break
         case ",trivia":
-            await PlaceHolder(message)
+            await Trivia(message)
             console.log('asd')
             break
-        case ",test":
-            await RestartClient(wwclient)
+        case ",hm":
+            await hangman(message)
+            break
+        case ",restart":
+            await RestartClient(wwclient);
+            //@ts-ignore
+            await wwclient.sendMessage(process.env.PHONE_NUMBER_SERIALIZED, "Client has been restarted")
             break
         default:
             return
