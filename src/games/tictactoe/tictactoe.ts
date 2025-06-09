@@ -1,18 +1,27 @@
-import { Chat, Client, Contact, Message } from "whatsapp-web.js";
+import { Contact, Message } from "whatsapp-web.js";
+import { wwclient } from "../../../main";
+import { MessageEvent } from "../../Events/messageevent";
+import { Game } from "./components";
 
-export const Name : string = ""
-export const Command : string = ""
-export const Description : string = ""
-export const AdminOnly : boolean = true
+export let chatId: string | undefined;
+export let playerOne: string | undefined;
+export let playerTwo: string | undefined;
+// export let board: string[][] = new Array().push()
 
-async function changeMessageSettings(wwclient : Client, message : Message, booleanValue : boolean) {
-    const chat : Chat = await message.getChat()
-    //@ts-ignore
-    const settings : boolean = await chat.setMessagesAdminsOnly(booleanValue)
-
-    if (settings) {
-         return wwclient.sendMessage(message.from, booleanValue ? "Settings changed to admins only" : "Settings changed to all")
+export default async function TicTacToe(message: Message) {
+    chatId = (await message.getChat()).id._serialized;
+    let mentions: Array<Contact> = await message.getMentions()
+    if (mentions.length == 0) {
+        return
     }
 
-    return wwclient.sendMessage(message.from, "not enough permissions")
+    if (mentions.length > 1) {
+        return message.reply("You can mention only one other player")
+    }
+
+    playerOne = (await message.getContact()).id._serialized
+    playerTwo = mentions[0].id._serialized
+
+    wwclient.removeListener("message", MessageEvent);
+    wwclient.addListener("message", Game)
 }

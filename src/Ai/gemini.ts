@@ -13,10 +13,25 @@ const model : GenerativeModel = genAI.getGenerativeModel(
 
 const imageModel : GenerativeModel = genAI.getGenerativeModel(
     {
-        model : "gemini-2.0-flash-exp-image-generation"
+        model : "imagen-3.0-generate-002"
     },
     {
         timeout : 150
+    }
+)
+
+const imageChat: ChatSession = imageModel.startChat(
+    {
+         history : [
+            {
+                role : "user",
+                parts : [
+                    {
+                        text : "asd asd fr fr"
+                    }
+                ]
+            }
+        ],
     }
 )
 
@@ -67,67 +82,85 @@ export async function geminiChat(wwclient : Client,message : Message) {
 export async function immediateChat(wwclient : Client, message : Message) {
 
     const prompt : string = message.body.split(" ").slice(1).join("")
-    let media : MessageMedia
+    let media : MessageMedia | undefined = undefined
 
     if (!message.hasMedia) {
-        if(!message.hasQuotedMsg) {
-            return
-        } else {
+        if(message.hasQuotedMsg) {
             message = await message.getQuotedMessage()
-            if (!message.hasMedia) {
-                return
+            if (message.hasMedia) {
+                media = await message.downloadMedia()
             }
-            media = await message.downloadMedia()
         }
-    } else {
+    } else if (message.hasMedia) {
         media = await message.downloadMedia()
     }
     
-    const response : Promise<GenerateContentResult> = model.generateContent(
-        {
-         contents : [
+    let parts = [
             {
-                role : 'user',
-                parts : [
-                     {
-                        inlineData : {
-                            mimeType : media.mimetype,
-                            data : media.data
-                        }       
-                     },
-                    {
-                        text : prompt
-                    }
-                    
-                ]
+                text: prompt
             }
-         ]
+        ]
+    if (media != undefined) {
+        parts = [
+            {
+                text: prompt,
+            },
+            
+        ]
+    }
 
-        }
-    )
+    const response : GenerateContentResult | void = await imageChat.sendMessage(parts).catch(error => console.log(error.message))
 
-    const responseText : string = (await response).response.text()
-    return await message.reply(responseText)
+    // const responseText = response.candidates[0].content.parts
+    console.log(response)
 }
 
-// ASD ASD gemini cannot send images
+// ASD ASD gemini cannot send images :: it is there     
 export async function generateImage(wwclient : Client, message : Message) {
     
     const prompt : string = message.body.split(" ").slice(1).join("")
-    const response = imageModel.generateContent(
-        {
-            contents : [
-                {
-                    role : "user",
-                    parts : [
-                        {
-                            text : prompt
-                        }
-                    ]
-                }
-            ]
+    let media : MessageMedia | undefined = undefined
+
+    if (!message.hasMedia) {
+        if(message.hasQuotedMsg) {
+            message = await message.getQuotedMessage()
+            if (message.hasMedia) {
+                media = await message.downloadMedia()
+            }
         }
-    )
+    } else if (message.hasMedia) {
+        media = await message.downloadMedia()
+    }
+    
+    let parts = [
+            {
+                text: prompt
+            }
+        ]
+    if (media != undefined) {
+        parts.push(
+            {
+                //@ts-ignore
+                inlineData: {
+                    mimeType: media.mimetype,
+                    data: media.data
+                }
+            }
+        ) 
+    }
+
+    // const response = await imageModel.generateContent(
+    //     {
+    //         contents : [
+    //             {
+    //                 role : "user",
+    //                 parts : [
+    //                     parts
+    //                 ]
+    //             }
+    //         ]
+    //     }
+    // )
     
 }
 

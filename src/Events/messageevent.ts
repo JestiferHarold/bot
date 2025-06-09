@@ -1,4 +1,4 @@
-import { Message } from "whatsapp-web.js";
+import { Message, MessageMedia } from "whatsapp-web.js";
 import { deleteBlockedUsersMessage } from "./deletemessages";
 import { clientShutdown } from "../client/shutdown";
 import { BlockUser, UnBlockUser } from "./revokeusers";
@@ -45,7 +45,7 @@ import { EarthImage } from "../Nasa/earth";
 import { Apod } from "../Nasa/apod";
 import { getLyrics } from "../songs/lyricsovh";
 import { paste } from "../pastebin/paste";
-import { getRepositoryData } from "../GitLines/repositorylines";
+import { getRepositoryData } from "../CodeTabs/repositorylines";
 import { CAAS } from "../Animals/cats/catasaservice";
 import { askOllama, chooseModel } from "../Ai/ollama";
 import { availableModels, mistralTextGeneration, modelSelector } from "../Ai/mistral";
@@ -54,6 +54,10 @@ import { memoryGame } from "../games/timerecord/tr";
 import { RestartClient } from "./startup";
 import { hangman } from "../games/hangman/hangman";
 import { Trivia } from "../games/Trivia/trivia";
+import TicTacToe from "../games/tictactoe/tictactoe";
+import { draw } from "../games/tictactoe/components";
+import getWeather from "../CodeTabs/weather";
+import websiteRank from "../CodeTabs/rank";
 
 
 export const MessageEvent = async (message: Message ) => {
@@ -300,6 +304,22 @@ export const MessageEvent = async (message: Message ) => {
             await RestartClient(wwclient);
             //@ts-ignore
             await wwclient.sendMessage(process.env.PHONE_NUMBER_SERIALIZED, "Client has been restarted")
+            break
+        case ",ttt":
+            await TicTacToe(message);
+            break
+        case ",test":
+            await message.reply(new MessageMedia("image/jpeg", (await draw([
+                [".",".","."],
+                ["x","x","o"],
+                ["o","x","o"]
+            ])).split(",")[1]))
+            break;
+        case ",t":
+            await getWeather(message);
+            break;
+        case ",r":
+            await websiteRank(message)
             break
         default:
             return

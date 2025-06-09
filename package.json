@@ -5,7 +5,7 @@
   "scripts": {
     "build": "tsc",
     "start": "npx ts-node main",
-    "test": "ts-node src/Nasa/earth.ts"
+    "test": "ts-node test.ts"
   },
   "dependencies": {
     "@budibase/nano": "^10.1.5",
@@ -30,7 +30,7 @@
     "plotly.js-basic-dist": "^3.0.1",
     "plotly.js-dist-min": "^3.0.1",
     "pouchdb": "^9.0.0",
-    "puppeteer": "^24.9.0",
+    "puppeteer": "^24.10.0",
     "qrcode-terminal": "^0.12.0",
     "react": "^19.1.0",
     "ts-node": "^10.9.2",
