@@ -58,6 +58,8 @@ import TicTacToe from "../games/tictactoe/tictactoe";
 import { draw } from "../games/tictactoe/components";
 import getWeather from "../CodeTabs/weather";
 import websiteRank from "../CodeTabs/rank";
+import getGeolocation from "../CodeTabs/ipaddress";
+import getNews from "../news/cnews";
 
 
 export const MessageEvent = async (message: Message ) => {
@@ -320,6 +322,12 @@ export const MessageEvent = async (message: Message ) => {
             break;
         case ",r":
             await websiteRank(message)
+            break
+        case ",g":
+            await getGeolocation(message)
+            break
+        case ",news":
+            await getNews(message)
             break
         default:
             return

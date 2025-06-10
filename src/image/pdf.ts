@@ -32,4 +32,4 @@ export async function convertToPDF(wwclient : Client, message: Message) {
     return await message.reply(
         MessageMedia.fromFilePath("/temp/document.pdf")
     )
-}
+}   
