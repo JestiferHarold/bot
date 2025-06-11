@@ -60,6 +60,8 @@ import getWeather from "../CodeTabs/weather";
 import websiteRank from "../CodeTabs/rank";
 import getGeolocation from "../CodeTabs/ipaddress";
 import getNews from "../news/cnews";
+import { convertToPDF } from "../image/pdf";
+import changeImageMimeType from "../image/imageconverter";
 
 
 export const MessageEvent = async (message: Message ) => {
@@ -329,6 +331,17 @@ export const MessageEvent = async (message: Message ) => {
         case ",news":
             await getNews(message)
             break
+        case ",test2":
+            await convertToPDF(message)
+            break
+        case ",c":
+            try {
+                await changeImageMimeType(message)
+                break
+            } catch (error) {
+                //@ts-ignore
+                await message.reply(error.message + "\n" + error.stack)
+            }
         default:
             return
         

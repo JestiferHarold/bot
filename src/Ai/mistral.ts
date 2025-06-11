@@ -1,5 +1,5 @@
 import { Mistral } from "@mistralai/mistralai";
-import { ChatCompletionResponse, ContentChunk, FinishReason } from "@mistralai/mistralai/models/components";
+import { AssistantMessage, ChatCompletionResponse, ContentChunk, FinishReason } from "@mistralai/mistralai/models/components";
 import { Client, Message } from "whatsapp-web.js";
 import { MistralAIModels } from "../types/AiTypes";
 
@@ -67,34 +67,41 @@ export async function availableModels(wwclient: Client, message: Message) {
 export async function mistralTextGeneration(wwclient : Client, message : Message) {
 
     const prompt : string = message.body.split(" ").slice(1).join(" ")
-    const response : ChatCompletionResponse = await MistralClient.chat.complete(
-        {
-            model : model,
-            temperature : 0.1,
-            safePrompt : true,
-            stream : false,
-            responseFormat : {
-                type : "json_object"
-            },
-            messages : [
-                {
-                    role : "system",
-                    content : "your are a ai assistance",
+    let response: ChatCompletionResponse
+    try {
+        response = await MistralClient.chat.complete(
+            {
+                model : model,
+                temperature : 0.9,
+                safePrompt : false,
+                stream : false,
+                responseFormat : {
+                    type : "json_object"
                 },
-                {
-                    role : "user",
-                    content : prompt
-                }
-            ]
-        }
-    )
+                messages : [
+                    {
+                        role : "system",
+                        //Okay, Now I really do believe that frenchies are good at nothing other than love making, because wtfFFFFFF. 
+                        content: "You are an AI assistant that helps the user with their needs. You MUST respond in valid JSON format.  The JSON should have a 'response' key containing your answer."
+                    },
+                    {
+                        role : "user",
+                        content : prompt
+                    }
+                ]
+            }
+        )
+    } catch (error) {
+        //@ts-ignore
+        return await wwclient.sendMessage(message.from, error.message)
+    }
 
     //@ts-ignore
     if (response.choices == undefined || response.choices.length == 0 || response.choices[0].FinishReason == FinishReason.Error) {
         return await wwclient.sendMessage(message.from, "Mistral Error")
     }
 
-    const responseText : string | Array<ContentChunk> | null | undefined = response.choices[0].message.content
+    const responseText : string | Array<ContentChunk> | null | undefined | AssistantMessage = response.choices[0].message.content   
 
     if (typeof responseText == undefined || typeof responseText == null ) {
         return await wwclient.sendMessage(message.from, "Mistral Error")
@@ -102,10 +109,10 @@ export async function mistralTextGeneration(wwclient : Client, message : Message
 
     //@ts-ignore
     if (typeof responseText == Array<ContentChunk>) {
-        //whatever that should come here
+        //whatever that should come here :: I'm running out of whatever that makes me do all this non-sense.
     }
 
     //@ts-ignore
-    return await message.reply(responseText)
+    return await message.reply(JSON.parse(responseText).response)
 
 }

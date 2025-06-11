@@ -1,6 +1,6 @@
-import { Message } from "whatsapp-web.js";
+import { Contact, Message } from "whatsapp-web.js";
 import { startTime, wwclient } from "../../../main";
-import { chatId, playerOne, playerTwo } from "./tictactoe";
+import { chatId, guesses, playerOne, playerTwo } from "./tictactoe";
 import { Jimp } from "jimp";
 import { MessageEvent } from "../../Events/messageevent";
 
@@ -11,6 +11,20 @@ export const BOARD_HEIGHT: number = 1104;
 export const BOARD_WIDTH: number = 736;
 export const CELL_HEIGHT: number = 170.6;
 export const CELL_WIDTH: number = 170.6;
+
+export enum TicTacToeCoins { //change the name
+  FULL_CROSS = "X",
+  FULL_ZERO = "O"
+}
+
+export interface TicTacToeGame {
+  Players: Array< TTTPlayer >
+}
+
+export interface TTTPlayer {
+  contact: Contact
+  coin: TicTacToeCoins
+}
 
 export const Boxes: Record<number, Pixel> = {
   1: { x: 112, y: 376 },
@@ -43,6 +57,8 @@ export const Game = async (message: Message) => {
   if (contact != playerOne && contact != playerTwo) {
     return
   }
+
+
 }
 
 export async function draw(matrix: string[][]) {

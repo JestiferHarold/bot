@@ -13,7 +13,7 @@ const model : GenerativeModel = genAI.getGenerativeModel(
 
 const imageModel : GenerativeModel = genAI.getGenerativeModel(
     {
-        model : "imagen-3.0-generate-002"
+        model : "gemini-2.0-flash-preview-image-generation"
     },
     {
         timeout : 150
@@ -109,7 +109,19 @@ export async function immediateChat(wwclient : Client, message : Message) {
         ]
     }
 
-    const response : GenerateContentResult | void = await imageChat.sendMessage(parts).catch(error => console.log(error.message))
+    const response = await imageModel.generateContent({
+        contents: [
+            {
+                role: "user",
+                parts: [
+                    {
+                        text: prompt
+                    }
+                ]
+            }
+        ]
+    })
+    // const response : GenerateContentResult | void = await imageChat.sendMessage(parts).catch(error => console.log(error.message))
 
     // const responseText = response.candidates[0].content.parts
     console.log(response)
