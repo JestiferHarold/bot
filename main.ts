@@ -7,7 +7,7 @@
 
 import dotenv from "dotenv"
 dotenv.config()
-import { Client, LocalAuth } from 'whatsapp-web.js'
+import { Client, LocalAuth, Message } from 'whatsapp-web.js'
 import qrcode from 'qrcode-terminal' //Importing error man fuck tsc, just import the function, don't default
 import { RevokedMessage } from './src/classes/RevokedMessage'
 import { SavedContact } from './src/classes/User'
@@ -38,6 +38,8 @@ export let deletedMessage :Array<RevokedMessage> = new Array()
 export let Groups: Array<MutedUser> = new Array()
 export let Contacts: Array<SavedContact> = new Array()
 
+const workFunction = (message: Message) => {}
+
 wwclient.on('qr', qr => {
     qrcode.generate(
         qr,
@@ -56,8 +58,10 @@ wwclient.on("ready", async () => {
     await StartClient(wwclient) // Change the function names 
     
     console.log("started")
+    // wwclient.addListener("message", workFunction)
     //@ts-ignore
     await wwclient.sendMessage(process.env.PHONE_NUMBER_SERIALIZED, "Client started")
+    // wwclient.removeListener("message", workFunction)
 })
 
 wwclient.initialize()

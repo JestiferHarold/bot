@@ -1,6 +1,6 @@
-import { Contact, Message } from "whatsapp-web.js";
+import { Contact, Message, MessageMedia } from "whatsapp-web.js";
 import { startTime, wwclient } from "../../../main";
-import { chatId, guesses, playerOne, playerTwo } from "./tictactoe";
+import { board, changePlayer, chatId, currentPlayer, guesses, playerHasGussed, playerOne, playerTwo } from "./tictactoe";
 import { Jimp } from "jimp";
 import { MessageEvent } from "../../Events/messageevent";
 
@@ -13,6 +13,7 @@ export const CELL_HEIGHT: number = 170.6;
 export const CELL_WIDTH: number = 170.6;
 
 export enum TicTacToeCoins { //change the name
+  NULL = ".",
   FULL_CROSS = "X",
   FULL_ZERO = "O"
 }
@@ -38,15 +39,20 @@ export const Boxes: Record<number, Pixel> = {
   9: { x: 453, y: 717 },
 };
 
+export const WINNING_COMBOS = [
+  [0, 1, 2]
+]
+
 export const Game = async (message: Message) => {
 
   if (message.body == ",status") {
     return await message.reply(`\`\`\`Online\n\nUptime = ${Date.now() - startTime}\n\nCurrent Event = ${this}\`\`\``)
   }
  
-  if (message.body.toLowerCase() == "quit") {
+  if (message.body == "quit" && (message.from == playerOne.contact.id._serialized || message.from == playerTwo.contact.id._serialized)) {
     wwclient.removeListener("message", Game)
     wwclient.addListener("message", MessageEvent)
+    return await message.reply("Game Ended")
   }
 
   if ((await message.getChat()).id._serialized != chatId) {
@@ -54,11 +60,71 @@ export const Game = async (message: Message) => {
   }
 
   const contact: string = (await message.getContact()).id._serialized
-  if (contact != playerOne && contact != playerTwo) {
+  if (contact != playerOne.contact.id._serialized && contact != playerTwo.contact.id._serialized) {
     return
   }
 
+  if (message.body.length > 1) {
+    return
+  } 
 
+  if (!(/\d/.test(message.body))) {
+    return
+  }
+
+  try {
+    let guess = parseInt(message.body)
+    if (guess < 1 || guess > 9) {
+      return await message.react("a") //CROSS HERE
+    }
+
+    if (guess < 4) {
+      if (board[0][guess - 1] == TicTacToeCoins.FULL_CROSS || board[0][guess - 1] == TicTacToeCoins.FULL_ZERO) {
+        return await message.reply("Already filled, try a different box") 
+      } else {
+        board[0][guess - 1] = currentPlayer.coin
+        changePlayer()
+      }
+    } else if (guess < 7) {
+      if (board[1][guess - 3] == TicTacToeCoins.FULL_CROSS || board[1][guess - 3] == TicTacToeCoins.FULL_ZERO) {
+        return await message.reply("Already filled, try a different box")
+      } else {
+        board[1][guess - 3] = currentPlayer.coin
+        changePlayer()
+      }
+    } else if (guess < 10) {
+      if (board[2][guess - 5] == TicTacToeCoins.FULL_CROSS || board[2][guess - 5] == TicTacToeCoins.FULL_ZERO) {
+        return await message.reply("Already filled, try a different box")
+      } else {
+        board[2][guess - 5] = currentPlayer.coin
+        changePlayer()
+      } 
+    } else {
+      return
+    }  
+  } catch (err) {
+    console.log(err)
+  }
+
+  playerHasGussed()
+
+  if (guesses == 9) {
+    return await wwclient.sendMessage(chatId, "Game ends in a draw")
+  }
+
+  if (guesses > 3) {
+    for(let i = 0; i < 3; i++) {
+      for(let j = 0; j < 3; j++) {
+        if (board[i][j] == TicTacToeCoins.NULL) {
+          continue
+        }
+        
+        // if(board)
+      }
+    }
+  }
+
+  await wwclient.sendMessage(message.from, new MessageMedia("image/jpg", ((await draw(board)).split(",")[1])))
 }
 
 export async function draw(matrix: string[][]) {
@@ -77,7 +143,7 @@ export async function draw(matrix: string[][]) {
         continue
       }
 
-      if (matrix[i][j].toLowerCase() == "x") {
+      if (matrix[i][j]== "X") {
         let m = i + j + (i == 0 ? 1 : i == 1 ? 3 : 5)
         images.push(
           {
@@ -88,7 +154,7 @@ export async function draw(matrix: string[][]) {
         continue
       }
 
-      if (matrix[i][j].toLowerCase() == "o") {
+      if (matrix[i][j] == "O") {
         let m = i + j + (i == 0 ? 1 : i == 1 ? 3 : 5)
         images.push(
           {

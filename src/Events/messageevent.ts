@@ -55,13 +55,13 @@ import { RestartClient } from "./startup";
 import { hangman } from "../games/hangman/hangman";
 import { Trivia } from "../games/Trivia/trivia";
 import TicTacToe from "../games/tictactoe/tictactoe";
-import { draw } from "../games/tictactoe/components";
 import getWeather from "../CodeTabs/weather";
 import websiteRank from "../CodeTabs/rank";
 import getGeolocation from "../CodeTabs/ipaddress";
 import getNews from "../news/cnews";
 import { convertToPDF } from "../image/pdf";
 import changeImageMimeType from "../image/imageconverter";
+import { getVideo } from "../image/twitter";
 
 
 export const MessageEvent = async (message: Message ) => {
@@ -310,14 +310,10 @@ export const MessageEvent = async (message: Message ) => {
             await wwclient.sendMessage(process.env.PHONE_NUMBER_SERIALIZED, "Client has been restarted")
             break
         case ",ttt":
-            await TicTacToe(message);
+            // await TicTacToe(message);
             break
         case ",test":
-            await message.reply(new MessageMedia("image/jpeg", (await draw([
-                [".",".","."],
-                ["x","x","o"],
-                ["o","x","o"]
-            ])).split(",")[1]))
+            await TicTacToe(message)
             break;
         case ",t":
             await getWeather(message);
@@ -332,7 +328,7 @@ export const MessageEvent = async (message: Message ) => {
             await getNews(message)
             break
         case ",test2":
-            await convertToPDF(message)
+            await getVideo(message)
             break
         case ",c":
             try {
