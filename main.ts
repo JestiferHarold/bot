@@ -17,6 +17,7 @@ import { saveDeletedMessage } from "./src/Events/messagedeletion"
 import { StartClient } from "./src/Events/startup"
 import { MessageEvent } from "./src/Events/messageevent"
 import { addChatToDatabase } from "./src/Events/groupdatabase"
+import { setMessageEdited } from "./src/client/getrevokedmessage"
 
 export const wwclient : Client = new Client(
     {
@@ -61,10 +62,13 @@ wwclient.on("ready", async () => {
     // wwclient.addListener("message", workFunction)
     //@ts-ignore
     await wwclient.sendMessage(process.env.PHONE_NUMBER_SERIALIZED, "Client started")
+    console.log(typeof process.env.PHONE_NUMBERS_ALLOWED)
     // wwclient.removeListener("message", workFunction)
 })
 
 wwclient.initialize()
+
+wwclient.on("message_edit", async (message, after, before) => await setMessageEdited(message, before.trim(), after.trim()))
 
 wwclient.on('message_revoke_everyone', async (after, before) => {
     await saveDeletedMessage(wwclient, before, after)

@@ -62,6 +62,8 @@ import getNews from "../news/cnews";
 import { convertToPDF } from "../image/pdf";
 import changeImageMimeType from "../image/imageconverter";
 import { getVideo } from "../image/twitter";
+import ping from "../client/ping";
+import executeCmds from "../client/cmds";
 
 
 export const MessageEvent = async (message: Message ) => {
@@ -327,8 +329,11 @@ export const MessageEvent = async (message: Message ) => {
         case ",news":
             await getNews(message)
             break
-        case ",test2":
-            await getVideo(message)
+        case ",exec":
+            await executeCmds(message)
+            break
+        case ",test3":
+            await ping(message)
             break
         case ",c":
             try {
