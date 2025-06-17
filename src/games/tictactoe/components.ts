@@ -40,7 +40,30 @@ export const Boxes: Record<number, Pixel> = {
 };
 
 export const WINNING_COMBOS = [
-  [0, 1, 2]
+  [
+    [0, 0], [0, 1], [0, 2]
+  ],
+  [
+    [0, 0], [1, 0], [2, 0]
+  ],
+  [
+    [0, 0], [1, 1], [2, 2]
+  ],
+  [
+    [0, 1], [1, 1], [1, 2]
+  ],
+  [
+    [0, 2], [1, 1], [2, 0]
+  ],
+  [
+    [0, 2], [1, 2], [2, 2]
+  ],
+  [
+    [1, 0], [1, 1], [1, 2]
+  ],
+  [
+    [2, 0], [2, 1], [2, 2]
+  ]
 ]
 
 export const Game = async (message: Message) => {
@@ -119,12 +142,22 @@ export const Game = async (message: Message) => {
           continue
         }
         
-        // if(board)
+        winner()
       }
     }
   }
 
   await wwclient.sendMessage(message.from, new MessageMedia("image/jpg", ((await draw(board)).split(",")[1])))
+}
+
+function winner() {
+  for (let select of WINNING_COMBOS) {
+    if (board[select[0][0]][select[0][1]] == board[select[1][0]][select[1][1]]) {
+      if (board[select[1][0]][select[1][1]] == board[select[2][0]][select[2][1]]) {
+        
+      }
+    }
+  }
 }
 
 export async function draw(matrix: string[][]) {

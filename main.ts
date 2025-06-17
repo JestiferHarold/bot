@@ -62,7 +62,6 @@ wwclient.on("ready", async () => {
     // wwclient.addListener("message", workFunction)
     //@ts-ignore
     await wwclient.sendMessage(process.env.PHONE_NUMBER_SERIALIZED, "Client started")
-    console.log(typeof process.env.PHONE_NUMBERS_ALLOWED)
     // wwclient.removeListener("message", workFunction)
 })
 

@@ -5,6 +5,7 @@ export async function createGroupChat(wwclient : Client, message : Message) : Pr
     let participants : Array<Contact> | Array<GroupParticipant> | Array<ContactId> | Array<string>= await message.getMentions()
     const chat : Chat = await message.getChat()
     const contact : Contact = await message.getContact()
+    const mentions: Array<Contact> = await message.getMentions()
 
     if (!chat.isGroup) {
         return
@@ -12,17 +13,23 @@ export async function createGroupChat(wwclient : Client, message : Message) : Pr
 
     let leaveChat : boolean = false
     let name : string;
-    let digit : RegExp = /\d/
+    // let digit : RegExp = /\d/
 
 
-    if (participants.length != 0 && digit.test(message.body[(message.body.indexOf("@") + 1)])) {
-        console.log("here too")
-        name = message.body.slice(2, message.body.indexOf("@"))
+    // if (participants.length != 0 && digit.test(message.body[(message.body.indexOf("@") + 1)])) {
+        // console.log("here too")
+        // name = message.body.slice(2, message.body.indexOf("@"))
 
-    } else if (message.body.toLowerCase().endsWith("--everyone")) {
+    // }
+    if (mentions.length != 0) {
+        leaveChat = (message.body.split(" ").includes("-l") || message.body.split(" ").includes("-leave"))
+        name = message.body.split(" ").filter(element => { if (!element.startsWith("--") && !element.startsWith("-") && !element.startsWith(",")) { return element } }).join(" ")
+        // participants = mentions.filter(elem => new Grop).push()
+        return await message.reply("❌")
+    } else if (message.body.toLowerCase().endsWith("--everyone") || message.body.toLowerCase().split(" ").includes("-e") || message.body.toLowerCase().split(" ").includes("-everyone")) {
 
-        leaveChat = true
-        name = message.body.slice(2, message.body.length - 10)
+        leaveChat = (message.body.split(" ").includes("-l") || message.body.split(" ").includes("-leave"))
+        name = message.body.split(" ").filter(element => { if (!element.startsWith("--") && !element.startsWith("-") && !element.startsWith(",")) { return element } }).join(" ")
 
         //@ts-ignore
         participants = chat.participants

@@ -64,6 +64,7 @@ import changeImageMimeType from "../image/imageconverter";
 import { getVideo } from "../image/twitter";
 import ping from "../client/ping";
 import executeCmds from "../client/cmds";
+import { showMutedUsers } from "../client/showmutedusers";
 
 
 export const MessageEvent = async (message: Message ) => {
@@ -188,7 +189,12 @@ export const MessageEvent = async (message: Message ) => {
             if (!(contact == process.env.PHONE_NUMBER_SERIALIZED)) {
                 return
             }
-            await createGroupChat(wwclient, message)
+            try {
+                await createGroupChat(wwclient, message)
+            } catch (error) {
+                //@ts-ignore
+                await wwclient.sendMessage(message.from, error.message)
+            }
             break
         case ",f":
             await timesForwarded(message)
@@ -343,8 +349,13 @@ export const MessageEvent = async (message: Message ) => {
                 //@ts-ignore
                 await message.reply(error.message + "\n" + error.stack)
             }
+        case ",sd":
+            await showMutedUsers(message)
+            break
         default:
             return
         
     }
 }
+
+//The one that runs in digital ocean rn has issues with ",s" for getting deleted message and sticker, fix please

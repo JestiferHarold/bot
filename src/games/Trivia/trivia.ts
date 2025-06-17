@@ -320,3 +320,5 @@ function getCategory(flag : string) {
     }
     
 }
+
+//in getcategory two options have the same case, fix it

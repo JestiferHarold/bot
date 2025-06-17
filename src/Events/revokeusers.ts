@@ -17,7 +17,7 @@ export async function BlockUser(wwclient: Client, message: Message) {
                 if (doc.BlockedUsers[i].groupId == id[0]) {
                     for (let user of id[1]) {
                         //@ts-ignore
-                        doc.BlockedUsers[i].users.push(user)
+                        if (!doc.BlockedUsers[i].users.includes(user)) doc.BlockedUsers[i].users.push(user)
                     }
                     break
                 }
