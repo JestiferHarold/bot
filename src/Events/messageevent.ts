@@ -277,7 +277,7 @@ export const MessageEvent = async (message: Message ) => {
             
             await setGroupPicture(wwclient, message)
             break
-        case ",s":
+        case ",stk":
             await sticker(wwclient, message)
             break
         case ",unmute":
