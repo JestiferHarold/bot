@@ -41,7 +41,7 @@ async function HitlerlifyAvatar(wwclient : Client, message : Message) {
     contactImage.composite(hitlerImage, 0, 0)
 
     const base64 : string = (await contactImage.getBase64("image/png")).split(",")[1]
-    const media : MessageMedia = new MessageMedia('image/png', base64, "circle.png")
+    const media : MessageMedia = new MessageMedia('image/png', base64, "meinfuhrer.png")
     
     return await message.reply(media)
 }

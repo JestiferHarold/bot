@@ -8,7 +8,7 @@ import destroyClient from "../client/destroy";
 import unpin from "../commands/unpin";
 import unmute from "../commands/umute";
 import sticker from "../commands/sticker";
-import { setGroupPicture } from "../commands/setgrouppicture";
+import { setGroupPicture } from "../commands/setgrouppicture";  
 import { ScreenShot } from "../commands/screenshot";
 import revokeGroupInvites from "../commands/revokeinvites";
 import references from "../commands/references";
@@ -49,7 +49,7 @@ import { getRepositoryData } from "../CodeTabs/repositorylines";
 import { CAAS } from "../Animals/cats/catasaservice";
 import { askOllama, chooseModel } from "../Ai/ollama";
 import { availableModels, mistralTextGeneration, modelSelector } from "../Ai/mistral";
-import { geminiChat, immediateChat } from "../Ai/gemini";
+import { geminiChat, immediateChat, restartGemini } from "../Ai/gemini";
 import { memoryGame } from "../games/timerecord/tr";
 import { RestartClient } from "./startup";
 import { hangman } from "../games/hangman/hangman";
@@ -65,6 +65,8 @@ import { getVideo } from "../image/twitter";
 import ping from "../client/ping";
 import executeCmds from "../client/cmds";
 import { showMutedUsers } from "../client/showmutedusers";
+import { Errors } from "../types/Errors";
+import { suiiiiii } from "../image/ronaldo";
 
 
 export const MessageEvent = async (message: Message ) => {
@@ -78,7 +80,8 @@ export const MessageEvent = async (message: Message ) => {
 
     let contact: string = (await message.getContact()).id._serialized
 
-    switch (message.body.split(" ")[0].toLowerCase()) {
+    try {
+        switch (message.body.split(" ")[0].toLowerCase()) {
         case ",block":
             if (!(contact == process.env.PHONE_NUMBER_SERIALIZED)) {
                 return
@@ -98,6 +101,10 @@ export const MessageEvent = async (message: Message ) => {
             await immediateChat(wwclient, message)
             break
         case ",jes":
+            if (message.body.toLowerCase().split(" ").includes("-r") || message.body.toLowerCase().split(" ").includes("--restart")) {
+                await restartGemini(message)
+                break
+            }
             await geminiChat(wwclient, message)
             break
         case ",mist":
@@ -182,6 +189,9 @@ export const MessageEvent = async (message: Message ) => {
         case ",dither":
             await ditherEffect(wwclient, message)
             break
+        case ",sui":
+            await suiiiiii(message)
+            break
         case ",cm":
             await clearMessagesFromClient(wwclient, message)
             break
@@ -265,7 +275,7 @@ export const MessageEvent = async (message: Message ) => {
             break
         case ",ss":
             if (!(contact == process.env.PHONE_NUMBER_SERIALIZED)) {
-                return
+                return await message.reply(Errors.ACCESS_BY_NON_ADMIN)
             }
 
             await ScreenShot(wwclient, message)
@@ -355,6 +365,10 @@ export const MessageEvent = async (message: Message ) => {
         default:
             return
         
+    }
+    } catch (error) {
+        //@ts-ignore
+        await wwclient.sendMessage(process.env.PHONE_NUMBER_SERIALIZED, `Error Name: ${error.name}\nError Cause: ${error.cause}\nError Message: ${error.message}\nError Stack: ${error.stack}`)
     }
 }
 

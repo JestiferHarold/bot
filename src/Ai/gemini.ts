@@ -4,6 +4,7 @@ import { Client, Message, MessageMedia } from "whatsapp-web.js"
 
 //@ts-ignore
 const genAI : GoogleGenerativeAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY)
+const systemText: string = "You are jessica harrow, you help people in their daily needs by providing usefull prompts"
 
 const model : GenerativeModel = genAI.getGenerativeModel(
     {
@@ -27,7 +28,7 @@ const imageChat: ChatSession = imageModel.startChat(
                 role : "user",
                 parts : [
                     {
-                        text : "asd asd fr fr"
+                        text : systemText
                     }
                 ]
             }
@@ -35,14 +36,14 @@ const imageChat: ChatSession = imageModel.startChat(
     }
 )
 
-const chat : ChatSession = model.startChat(
+let chat : ChatSession = model.startChat(
     {
         history : [
             {
                 role : "user",
                 parts : [
                     {
-                        text : "asd asd fr fr"
+                        text : systemText
                     }
                 ]
             }
@@ -177,3 +178,23 @@ export async function generateImage(wwclient : Client, message : Message) {
 }
 
 //GeminiChat and geminiChatForImages work 
+
+export async function restartGemini(message: Message) {
+    chat = model.startChat(
+        {
+            history : [
+                {
+                    role : "user",
+                    parts : [
+                        {
+                            text : systemText
+                        }
+                    ]
+                }
+            ],
+            
+        }
+    )
+
+    return await message.reply("Gemini Chat restarted")
+}
