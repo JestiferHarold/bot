@@ -4,7 +4,7 @@ export default async function changeImageMimeType(message: Message) {
   let target: undefined | MessageMedia
   
   if (message.body.split(" ").length == 1) {
-    return // put it there
+    return await message.react("❌");
   }
 
   let newMimeType = (message: Message) : string => {

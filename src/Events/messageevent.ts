@@ -317,7 +317,6 @@ export const MessageEvent = async (message: Message ) => {
             break
         case ",trivia":
             await Trivia(message)
-            console.log('asd')
             break
         case ",hm":
             await hangman(message)
@@ -328,7 +327,7 @@ export const MessageEvent = async (message: Message ) => {
             await wwclient.sendMessage(process.env.PHONE_NUMBER_SERIALIZED, "Client has been restarted")
             break
         case ",ttt":
-            // await TicTacToe(message);
+            await TicTacToe(message);
             break
         case ",test":
             await TicTacToe(message)
@@ -364,11 +363,12 @@ export const MessageEvent = async (message: Message ) => {
             break
         default:
             return
-        
+
     }
     } catch (error) {
         //@ts-ignore
         await wwclient.sendMessage(process.env.PHONE_NUMBER_SERIALIZED, `Error Name: ${error.name}\nError Cause: ${error.cause}\nError Message: ${error.message}\nError Stack: ${error.stack}`)
+        await (await message.getChat()).sendSeen();
     }
 }
 

@@ -142,7 +142,7 @@ export const Game = async (message: Message) => {
           continue
         }
         
-        winner()
+        await winner()
       }
     }
   }
@@ -150,14 +150,19 @@ export const Game = async (message: Message) => {
   await wwclient.sendMessage(message.from, new MessageMedia("image/jpg", ((await draw(board)).split(",")[1])))
 }
 
-function winner() {
+async function winner() {
   for (let select of WINNING_COMBOS) {
     if (board[select[0][0]][select[0][1]] == board[select[1][0]][select[1][1]]) {
       if (board[select[1][0]][select[1][1]] == board[select[2][0]][select[2][1]]) {
-        
+        // @ts-ignore
+        // await wwclient.sendMessage(chatId , `@${}`)
       }
     }
   }
+}
+
+async function gameOver() {
+
 }
 
 export async function draw(matrix: string[][]) {
