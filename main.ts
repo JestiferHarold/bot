@@ -18,6 +18,7 @@ import { StartClient } from "./src/Events/startup"
 import { MessageEvent } from "./src/Events/messageevent"
 import { addChatToDatabase } from "./src/Events/groupdatabase"
 import { setMessageEdited } from "./src/client/getrevokedmessage"
+import { IncomingCallEvent } from "./src/Events/call"
 
 export const wwclient : Client = new Client(
     {
@@ -59,10 +60,10 @@ wwclient.on("ready", async () => {
     await StartClient(wwclient) // Change the function names 
     
     console.log("started")
-    // wwclient.addListener("message", workFunction)
+    wwclient.addListener("message", workFunction)
     //@ts-ignore
     await wwclient.sendMessage(process.env.PHONE_NUMBER_SERIALIZED, "Client started")
-    // wwclient.removeListener("message", workFunction)
+    wwclient.removeListener("message", workFunction)
 })
 
 wwclient.initialize()
@@ -72,6 +73,8 @@ wwclient.on("message_edit", async (message, after, before) => await setMessageEd
 wwclient.on('message_revoke_everyone', async (after, before) => {
     await saveDeletedMessage(wwclient, before, after)
 })
+
+wwclient.on("call", async (call) => await IncomingCallEvent(call))
 
 wwclient.on("group_join", async (notification) => {
     console.log("working")

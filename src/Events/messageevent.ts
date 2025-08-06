@@ -82,120 +82,120 @@ export const MessageEvent = async (message: Message ) => {
 
     try {
         switch (message.body.split(" ")[0].toLowerCase()) {
-        case ",block":
+        case "~block":
             if (!(contact == process.env.PHONE_NUMBER_SERIALIZED)) {
                 return
             }
             await BlockUser(wwclient, message)
             break
-        case ",unblock":
+        case "~unblock":
             if (!(contact == process.env.PHONE_NUMBER_SERIALIZED)) {
                 return
             }
             await UnBlockUser(wwclient, message)
             break
-        case ",s":
+        case "~s":
             await getDeletedMessage(message, deletedMessage)
             break
-        case ",ic":
+        case "~ic":
             await immediateChat(wwclient, message)
             break
-        case ",jes":
+        case "~jes":
             if (message.body.toLowerCase().split(" ").includes("-r") || message.body.toLowerCase().split(" ").includes("--restart")) {
                 await restartGemini(message)
                 break
             }
             await geminiChat(wwclient, message)
             break
-        case ",mist":
+        case "~mist":
             if (message.body.split(" ")[1].toLowerCase() == "-m" || message.body.split(" ")[1].toLowerCase() == "--models") {
                 await availableModels(wwclient, message)
             } else {
                 await mistralTextGeneration(wwclient, message)
             }
             break
-        case ",mistmodel":
+        case "~mistmodel":
             modelSelector(message.body.split(" ")[1].slice(2).toLowerCase()) 
             break
-        case ",lam":
+        case "~lam":
             await askOllama(wwclient, message)
             break
-        case ",cmlam":
+        case "~cmlam":
             await chooseModel(message) 
             break
-        case ",cat":
+        case "~cat":
             await CAAS(wwclient, message)
             break
-        case ",repo":
+        case "~repo":
             await getRepositoryData(wwclient, message)
             break
-        case ",paste":
+        case "~paste":
             await paste(wwclient, message)
             break
-        case ",lyr":
+        case "~lyr":
             await getLyrics(wwclient, message)
             break
-        case ",apod":
+        case "~apod":
             await Apod(wwclient, message)
             break
-        case ",earth":
+        case "~earth":
             await EarthImage(wwclient, message)
             break
-        case ",adv":
+        case "~adv":
             await recieveAdvice(wwclient, message)
             break
-        case ",dad":
+        case "~dad":
             await dadJoke(wwclient, message)
             break
-        case ",uf":
+        case "~uf":
             await facts(wwclient, message)
             break
-        case ",kanye":
+        case "~kanye":
             await kanyeSpeaks(wwclient, message)
             break
-        case ",j":
+        case "~j":
             await crackAJoke(wwclient, message)
             break
-        case ",flimg":
+        case "~flimg":
             await memes(wwclient, message)
             break
-        case ",blur":
+        case "~blur":
             await gaussianBlur(wwclient, message)
             break
-        case ",circle":
+        case "~circle":
             await circle(wwclient, message)
             break
-        case ",inv":
+        case "~inv":
             await invert(wwclient, message)
             break
-        case ",pixel":
+        case "~pixel":
             await pixelate(wwclient, message)
             break
-        case ",sepia":
+        case "~sepia":
             await sepia(wwclient, message)
             break
-        case ",fuhrer":
+        case "~fuhrer":
             await HitlerlifyAvatar(wwclient, message)
             break
-        case ",gs":
+        case "~gs":
             await greyscale(wwclient, message)
             break
-        case ",flip":
+        case "~flip":
             await flip(wwclient, message)
             break
-        case ",eye":
+        case "~eye":
             await fisheye(wwclient, message)
             break
-        case ",dither":
+        case "~dither":
             await ditherEffect(wwclient, message)
             break
-        case ",sui":
+        case "~sui":
             await suiiiiii(message)
             break
-        case ",cm":
+        case "~cm":
             await clearMessagesFromClient(wwclient, message)
             break
-        case ",cg":
+        case "~cg":
             if (!(contact == process.env.PHONE_NUMBER_SERIALIZED)) {
                 return
             }
@@ -206,152 +206,151 @@ export const MessageEvent = async (message: Message ) => {
                 await wwclient.sendMessage(message.from, error.message)
             }
             break
-        case ",f":
+        case "~f":
             await timesForwarded(message)
             break
-        case ",gd":
+        case "~gd":
             if (!(contact == process.env.PHONE_NUMBER_SERIALIZED)) {
                 return
             }
             await groupDescription(wwclient, message)
             break
-        case ",gi":
+        case "~gi":
             if (!(contact == process.env.PHONE_NUMBER_SERIALIZED)) {
                 return
             }
 
             await changeMessageSettings(wwclient, message, message.body.toLowerCase().split(" ").includes("--admins") || message.body.toLowerCase().split(" ").includes("-a"))
             break
-        case ",dpg":
+        case "~dpg":
             if (!(contact == process.env.PHONE_NUMBER_SERIALIZED)) {
                 return
             }
 
             await deleteGroupProfilePicture(wwclient, message)
             break
-        case ",sgn":
+        case "~sgn":
             if (!(contact == process.env.PHONE_NUMBER_SERIALIZED)) {
                 return
             }
 
             await groupName(wwclient, message)
             break
-        case ",inc":
+        case "~inc":
             await getInviteCode(message)
             break
-        case ",gms":
+        case "~gms":
             if (!(contact == process.env.PHONE_NUMBER_SERIALIZED)) {
                 return
             }
             await changeMessageSettings(wwclient, message,  message.body.toLowerCase().split(" ").includes("--admins") || message.body.toLowerCase().split(" ").includes("-a"))
             break
-        case ",links":
+        case "~links":
             await susLinks(wwclient, message)
             break
-        case ",mute":
+        case "~mute":
             if (!(contact == process.env.PHONE_NUMBER_SERIALIZED)) {
                 return
             }
             await muteChat(message)
             break
-        case ",n":
+        case "~n":
             await getChatName(wwclient, message)
             break
-        case ",pin":
+        case "~pin":
             await pinMessage(message)
             break
-        case ",poll":
+        case "~poll":
             await createPoll(wwclient, message)
             break
-        case ",refs":
+        case "~refs":
             await references(wwclient, message)
             break
-        case ",reiv":
+        case "~reiv":
             if (!(contact == process.env.PHONE_NUMBER_SERIALIZED)) {
                 return
             }
             
             await revokeGroupInvites(wwclient, message)
             break
-        case ",ss":
+        case "~ss":
             if (!(contact == process.env.PHONE_NUMBER_SERIALIZED)) {
                 return await message.reply(Errors.ACCESS_BY_NON_ADMIN)
             }
 
             await ScreenShot(wwclient, message)
             break
-        case ",sgp":
+        case "~sgp":
             if (!(contact == process.env.PHONE_NUMBER_SERIALIZED)) {
                 return
             }
             
             await setGroupPicture(wwclient, message)
             break
-        case ",stk":
+        case "~stk":
             await sticker(wwclient, message)
             break
-        case ",unmute":
+        case "~unmute":
             if (!(contact == process.env.PHONE_NUMBER_SERIALIZED)) {
                 return
             }
 
             await unmute(message)
             break
-        case ",unpin":
+        case "~unpin":
             await unpin(message)
             break
-        case ",lg":
+        case "~lg":
             if (!(contact == process.env.PHONE_NUMBER_SERIALIZED)) {
                 return
             }
             await destroyClient(wwclient, message)
             break
-        case ",shutdown":
+        case "~shutdown":
             if (!(contact == process.env.PHONE_NUMBER_SERIALIZED)) {
                 return
             }
            await clientShutdown(message)
            break
-        case ",status":
+        case "~status":
             await message.reply(`\`\`\`Online\n\nUptime = ${Date.now() - startTime}\n\nCurrent Event = ${wwclient.listeners("message")}\`\`\``)
             break
-        case ",trivia":
+        case "~trivia":
             await Trivia(message)
-            console.log('asd')
             break
-        case ",hm":
+        case "~hm":
             await hangman(message)
             break
-        case ",restart":
+        case "~restart":
             await RestartClient(wwclient);
             //@ts-ignore
             await wwclient.sendMessage(process.env.PHONE_NUMBER_SERIALIZED, "Client has been restarted")
             break
-        case ",ttt":
-            // await TicTacToe(message);
+        case "~ttt":
+            await TicTacToe(message);
             break
-        case ",test":
+        case "~test":
             await TicTacToe(message)
             break;
-        case ",t":
+        case "~t":
             await getWeather(message);
             break;
-        case ",r":
+        case "~r":
             await websiteRank(message)
             break
-        case ",g":
+        case "~g":
             await getGeolocation(message)
             break
-        case ",news":
+        case "~news":
             await getNews(message)
             break
-        case ",exec":
+        case "~exec":
             await executeCmds(message)
             break
-        case ",test3":
+        case "~test3":
             await ping(message)
             break
-        case ",c":
+        case "~c":
             try {
                 await changeImageMimeType(message)
                 break
@@ -359,16 +358,17 @@ export const MessageEvent = async (message: Message ) => {
                 //@ts-ignore
                 await message.reply(error.message + "\n" + error.stack)
             }
-        case ",sd":
+        case "~sd":
             await showMutedUsers(message)
             break
         default:
             return
-        
+
     }
     } catch (error) {
         //@ts-ignore
         await wwclient.sendMessage(process.env.PHONE_NUMBER_SERIALIZED, `Error Name: ${error.name}\nError Cause: ${error.cause}\nError Message: ${error.message}\nError Stack: ${error.stack}`)
+        await (await message.getChat()).sendSeen();
     }
 }
 

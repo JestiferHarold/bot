@@ -34,7 +34,7 @@
     "plotly.js-basic-dist": "^3.0.1",
     "plotly.js-dist-min": "^3.0.1",
     "pouchdb": "^9.0.0",
-    "puppeteer": "^24.10.1",
+    "puppeteer": "^24.12.1",
     "qrcode-terminal": "^0.12.0",
     "react": "^19.1.0",
     "ts-node": "^10.9.2",
