@@ -74,7 +74,7 @@ export const MessageEvent = async (message: Message ) => {
         return
     }
 
-    if (!message.body.startsWith(",")) {
+    if (!message.body.startsWith("~")) {
         return
     }
 
