@@ -60,10 +60,10 @@ wwclient.on("ready", async () => {
     await StartClient(wwclient) // Change the function names 
     
     console.log("started")
-    wwclient.addListener("message", workFunction)
+    // wwclient.addListener("message", workFunction)
     //@ts-ignore
     await wwclient.sendMessage(process.env.PHONE_NUMBER_SERIALIZED, "Client started")
-    wwclient.removeListener("message", workFunction)
+    // wwclient.removeListener("message", workFunction)
 })
 
 wwclient.initialize()
