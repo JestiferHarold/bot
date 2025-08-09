@@ -1,1 +1,3 @@
-interface 
+interface StackUnderFlowException extends Error {
+  
+}
