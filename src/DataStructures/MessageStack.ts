@@ -2,50 +2,57 @@ import { ChatId, MessageEditOptions } from "whatsapp-web.js";
 import MessageNode from "./MessageNode";
 
 class MessageStack {
-    private top: null | MessageNode;
-    private chat: ChatId;
+    private _top: null | MessageNode;
+    private _chat: ChatId;
 
     constructor (chat: ChatId, rootMessage: MessageNode | null) {
-        this.chat = chat;
-        this.top = rootMessage;
+        this._chat = chat;
+        this._top = rootMessage;
     }
 
     getChatID(): ChatId {
-        return this.chat;
+        return this._chat;
     }
 
-    popTopMessage(): MessageNode | null {
-        if (this.top == null) {
+    push(messageNode: MessageNode) {
+        messageNode.nextMessageNode = this._top;
+        this._top = messageNode;
+    }
+
+    pop_topMessage(): MessageNode | null {
+        if (this._top == null) {
             // throw underflow exception
         }
 
         //@ts-ignore
-        let temp: MessageNode = this.top;
+        let temp: MessageNode = this._top;
         //@ts-ignore
-        this.top = this.top?.getNextMessageNode();
+        this._top = this._top?.getNextMessageNode();
         return temp;
     }
 
-    peekTopMessage(): MessageNode | null {
-        if (this.top == null) {
+    peek_topMessage(): MessageNode | null {
+        if (this._top == null) {
             // throw underflow exception
         }
 
-        return this.top;
+        return this._top;
     }
 
     resetMessageStack(): boolean {
-        let current: MessageNode | null = this.top;
+        let current: MessageNode | null = this._top;
         while (current != null) {
             let temp: MessageNode = current;
-            current = current.getNextMessageNode();
-            //delete it 
+            //@ts-ignore
+            current = current.NextMessageNode();
         }
 
         return true;
     }
 
-
+    isEmpty(): boolean {
+        return this._top == null;
+    }    
 }
 
 export default MessageStack

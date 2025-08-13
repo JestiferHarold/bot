@@ -1,27 +1,25 @@
 import { Chat, Contact, ContactId, Message } from "whatsapp-web.js";
 
 class MessageNode {
-    private nextMN: MessageNode | null;
-    private message: Message;
-            // private contact: ContactId;
+    private _nextMN: MessageNode | null;
+    private _message: Message;
 
     constructor(message: Message, nextMN: MessageNode | null = null) {
-        this.message = message;
-        this.nextMN = nextMN;
+        this._message = message;
+        this._nextMN = nextMN;
     }
 
-    getMessage(): Message {
-        return this.message;
+    public get Message(): Message {
+        return this._message;
     }
 
-    getNextMessageNode(): MessageNode | null {
-        return this.nextMN;
+    public get nextMessageNode(): MessageNode | null {
+        return this._nextMN;
     }
 
-    setNextMessageNode(MessageN: MessageNode | null) {
-        this.nextMN = MessageN;
+    public set nextMessageNode(MessageN: MessageNode | null) {
+        this._nextMN = MessageN;
     }
-
 }
 
 export default MessageNode
