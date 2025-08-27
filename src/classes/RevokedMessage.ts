@@ -1,7 +1,7 @@
 import { ChatId, Contact, Message, MessageMedia, MessageTypes } from "whatsapp-web.js";
 import { wwclient } from "../../main";
 
-export class RevokedMessage{
+export class RevokedMessage {
     
     type ?: MessageTypes
     body ?: string
