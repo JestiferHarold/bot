@@ -1,3 +1,9 @@
-export enum Errors { // PLEASE LEARN HOW TO NAME THINGS
-  ACCESS_BY_NON_ADMIN = "Error: lack of permissions to use this"
+function StackOverFlowException(message: string): never {
+    throw Error("Stack Over Flow Exception: " + message);
 }
+
+function StackUnderFlowException(message: string): never {
+    throw Error("Stack Under Flow Exception:" + message);
+}
+
+export { StackOverFlowException, StackUnderFlowException };
