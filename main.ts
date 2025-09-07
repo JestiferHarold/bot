@@ -7,20 +7,24 @@
 
 import dotenv from "dotenv"
 dotenv.config()
-import { Client, LocalAuth, Message } from 'whatsapp-web.js'
-import qrcode from 'qrcode-terminal' //Importing error man fuck tsc, just import the function, don't default
-import { RevokedMessage } from './src/classes/RevokedMessage'
-import { SavedContact } from './src/classes/User'
-import { MutedUser } from './src/classes/BlockedUsers'
-import Pouch from "pouchdb"
-import { saveDeletedMessage } from "./src/Events/messagedeletion"
-import { StartClient } from "./src/Events/startup"
-import { MessageEvent } from "./src/Events/messageevent"
-import { addChatToDatabase } from "./src/Events/groupdatabase"
-import { setMessageEdited } from "./src/client/getrevokedmessage"
-import { IncomingCallEvent } from "./src/Events/call"
+import pkg from 'whatsapp-web.js';
+const { Client, LocalAuth} = pkg;
+import { Message } from "whatsapp-web.js";
 
-export const wwclient : Client = new Client(
+import qrcode from 'qrcode-terminal' //Importing error man fuck tsc, just import the function, don't default
+// import { RevokedMessage } from './src/classes/RevokedMessage'
+// import { SavedContact } from './src/classes/User'
+// import { MutedUser } from './src/classes/BlockedUsers'
+import Pouch from "pouchdb"
+import { sihamritaposts } from "./src/Events/sihamrita.ts"
+// import { saveDeletedMessage } from "./src/Events/messagedeletion"
+// import { StartClient } from "./src/Events/startsup.ts"
+// import { MessageEvent } from "./src/Events/messageevent.ts"
+// import { addChatToDatabase } from "./src/Events/groupdatabase.ts"
+// // import { setMessageEdited } from "./src/client/getrevokedmessage"
+// import { IncomingCallEvent } from "./src/Events/call.ts"
+
+export const wwclient = new Client(
     {
         authStrategy : new LocalAuth (
             {
@@ -36,13 +40,14 @@ export const wwclient : Client = new Client(
 
 export const startTime: number = Date.now()
 export const database = new Pouch("Saves")
-export let deletedMessage :Array<RevokedMessage> = new Array()
-export let Groups: Array<MutedUser> = new Array()
-export let Contacts: Array<SavedContact> = new Array()
+// export let deletedMessage :Array<RevokedMessage> = new Array()
+// export let Groups: Array<MutedUser> = new Array()
+// export let Contacts: Array<SavedContact> = new Array()
+export let posts = 0;
 
 const workFunction = (message: Message) => {}
 
-wwclient.on('qr', qr => {
+wwclient.on('qr', (qr: any) => {
     qrcode.generate(
         qr,
         {
@@ -57,7 +62,7 @@ wwclient.on("auth_failure", () => {
 
 wwclient.on("ready", async () => {
 
-    await StartClient(wwclient) // Change the function names 
+    // await StartClient(wwclient) // Change the function names 
     
     console.log("started")
     wwclient.addListener("message", workFunction)
@@ -68,17 +73,35 @@ wwclient.on("ready", async () => {
 
 wwclient.initialize()
 
-wwclient.on("message_edit", async (message, after, before) => await setMessageEdited(message, before.trim(), after.trim()))
+// wwclient.on("message_edit", async (message, after, before) => await setMessageEdited(message, before.trim(), after.trim()))
 
-wwclient.on('message_revoke_everyone', async (after, before) => {
-    await saveDeletedMessage(wwclient, before, after)
+// wwclient.on('message_revoke_everyone', async (after, before) => {
+//     await saveDeletedMessage(wwclient, before, after)
+// })
+
+wwclient.on("message", async (message: Message) => {
+    const m = await message.getChat();
+    console.log(m.id)
 })
 
-wwclient.on("call", async (call) => await IncomingCallEvent(call))
+// wwclient.on("call", async (call) => await IncomingCallEvent(call))
 
-wwclient.on("group_join", async (notification) => {
-    console.log("working")
-    await addChatToDatabase(notification)
-})
+// wwclient.on("group_join", async (notification) => {
+//     console.log("working")
+//     await addChatToDatabase(notification)
+// })
  
-wwclient.on("message", MessageEvent)
+// wwclient.on("message", MessageEvent)
+
+
+setInterval(
+    async () => {
+    let newpost = await sihamritaposts();
+    let as = parseInt(newpost)
+       if (as != posts) {
+        wwclient.sendMessage("chatid", "New post from sih amrita");
+        posts = as
+       } 
+    }, 
+    900000
+)
