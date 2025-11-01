@@ -52,7 +52,7 @@ let chat : ChatSession = model.startChat(
     }
 )
 
-export async function geminiChat(wwclient : Client,message : Message) {
+async function geminiChat(wwclient : Client,message : Message) {
 
     let media : MessageMedia | undefined = undefined
 
@@ -80,7 +80,7 @@ export async function geminiChat(wwclient : Client,message : Message) {
 
 //I don't know why I'm dumb
 
-export async function immediateChat(wwclient : Client, message : Message) {
+async function immediateChat(wwclient : Client, message : Message) {
 
     const prompt : string = message.body.split(" ").slice(1).join("")
     let media : MessageMedia | undefined = undefined
@@ -129,7 +129,7 @@ export async function immediateChat(wwclient : Client, message : Message) {
 }
 
 // ASD ASD gemini cannot send images :: it is there     
-export async function generateImage(wwclient : Client, message : Message) {
+async function generateImage(wwclient : Client, message : Message) {
     
     const prompt : string = message.body.split(" ").slice(1).join("")
     let media : MessageMedia | undefined = undefined
@@ -179,7 +179,7 @@ export async function generateImage(wwclient : Client, message : Message) {
 
 //GeminiChat and geminiChatForImages work 
 
-export async function restartGemini(message: Message) {
+async function restartGemini(message: Message) {
     chat = model.startChat(
         {
             history : [
@@ -197,4 +197,11 @@ export async function restartGemini(message: Message) {
     )
 
     return await message.reply("Gemini Chat restarted")
+}
+
+export default {
+    geminiChat,
+    immediateChat,
+    generateImage,
+    restartGemini
 }

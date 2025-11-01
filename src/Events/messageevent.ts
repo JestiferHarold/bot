@@ -65,7 +65,7 @@ import { getVideo } from "../image/twitter";
 import ping from "../client/ping";
 import executeCmds from "../client/cmds";
 import { showMutedUsers } from "../client/showmutedusers";
-import { Errors } from "../types/Errors";
+// import { Errors } from "../types/Errors";
 import { suiiiiii } from "../image/ronaldo";
 
 
@@ -275,7 +275,7 @@ export const MessageEvent = async (message: Message ) => {
             break
         case "~ss":
             if (!(contact == process.env.PHONE_NUMBER_SERIALIZED)) {
-                return await message.reply(Errors.ACCESS_BY_NON_ADMIN)
+                return await message.reply(/*Errors.ACCESS_BY_NON_ADMIN*/"Error")
             }
 
             await ScreenShot(wwclient, message)
