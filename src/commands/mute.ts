@@ -5,7 +5,7 @@ export const Command : string = ""
 export const Description : string = ""
 export const AdminOnly : boolean = true
 
-async function muteChat(message : Message) : Promise<void> {
+async function muteChat(message : Message){
     let chat : Chat = await message.getChat()
 
     return chat.mute()

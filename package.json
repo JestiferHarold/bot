@@ -6,7 +6,8 @@
     "build": "tsc",
     "start": "npx ts-node main",
     "test": "ts-node test.ts",
-    "reset-puppet": "yarn remove puppeteer && yarn add puppeteer"
+    "reset-puppet": "yarn remove puppeteer && yarn add puppeteer",
+    "docs": "jsdoc -c jsdoc.conf.json"
   },
   "dependencies": {
     "@budibase/nano": "^10.1.5",
@@ -14,6 +15,7 @@
     "@google/generative-ai": "^0.24.1",
     "@mistralai/mistralai": "^1.6.1",
     "@types/pouchdb": "^6.4.2",
+    "better-docs": "^2.7.3",
     "canvacord": "^6.0.2",
     "canvas": "^3.1.0",
     "chart.js": "^4.4.9",
@@ -27,6 +29,7 @@
     "gemini-api": "^2.0.4",
     "got": "^14.4.7",
     "jimp": "^1.6.0",
+    "jsdoc": "^4.0.5",
     "nano": "^10.1.4",
     "node-shazam": "^1.2.7",
     "nodeplotlib": "^1.1.2",
@@ -42,7 +45,7 @@
     "ts-node": "^10.9.2",
     "ts-qrcode-terminal": "^1.0.1",
     "tsc": "^2.0.4",
-    "whatsapp-web.js": "^1.27.0"
+    "whatsapp-web.js": "^1.34.1"
   },
   "dependenciesMeta": {
     "puppeteer-core@18.2.1": {

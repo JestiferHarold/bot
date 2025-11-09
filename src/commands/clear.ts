@@ -1,19 +1,20 @@
 import { Chat, Client, Message } from "whatsapp-web.js";
 
-export const Name : string = ""
-export const Command : string = ""
-export const Description : string = ""
-export const AdminOnly : boolean = true
-
-async function clearMessagesFromClient(wwclient : Client, message : Message) : Promise<Message> {
+async function clearMessagesFromClient(wwclient : Client, message : Message): Promise<Message> {
     let id : string = message.from;
-    let chat : Chat = await message.getChat()
+    let chat : Chat = await message.getChat();
 
     if (await chat.clearMessages()) {
-        return wwclient.sendMessage(id, "Messages Clearaed")
+        return wwclient.sendMessage(id, "Client chat cleared");
     }
 
-    return wwclient.sendMessage(id, "Unable to clear messages")
+    return wwclient.sendMessage(id, "Client chat not cleared");
 }
 
-export default clearMessagesFromClient
+export default {
+    clearMessagesFromClient,
+    name: "",
+    command: "",
+    description: "",
+    adminOnly: true
+};

@@ -5,7 +5,7 @@ export const Command : string = ""
 export const Description : string = ""
 export const AdminOnly : boolean = true
 
-async function unmute(message : Message) : Promise<void> {
+async function unmute(message : Message) {
     let chat : Chat = await message.getChat()
 
     return await chat.unmute()

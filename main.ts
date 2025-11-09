@@ -1,9 +1,7 @@
-/*
-    To anyone who is reading this, most of the commands, api's or whatever you call which are available here are made using simple fetch requests.
-    So I'm confident that anyone can go through them with out any confusion, just because the main.ts file looks clean does'nt mean the other files too will be in that manner.
-    As of writing this, I have completed some of the things I wanted to do.
-    Most of the stuff I wrote here are while I'm sleep depraved
-*/
+/**
+ * 
+ */
+
 
 import dotenv from "dotenv"
 dotenv.config()
@@ -57,12 +55,10 @@ wwclient.on("auth_failure", () => {
 
 wwclient.on("ready", async () => {
 
-    await StartClient(wwclient) // Change the function names 
-    
+    // await StartClient(wwclient) // Change the function names 
     console.log("started")
     // wwclient.addListener("message", workFunction)
-    //@ts-ignore
-    await wwclient.sendMessage(process.env.PHONE_NUMBER_SERIALIZED, "Client started")
+    await wwclient.sendMessage(process.env.PHONE_NUMBER_SERIALIZED as string, "Client started")
     // wwclient.removeListener("message", workFunction)
 })
 
@@ -77,8 +73,7 @@ wwclient.on('message_revoke_everyone', async (after, before) => {
 wwclient.on("call", async (call) => await IncomingCallEvent(call))
 
 wwclient.on("group_join", async (notification) => {
-    console.log("working")
-    await addChatToDatabase(notification)
+    // await addChatToDatabase(notification)
 })
  
 wwclient.on("message", MessageEvent)

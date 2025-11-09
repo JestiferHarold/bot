@@ -1,23 +1,28 @@
 import { Chat, Client, Message } from "whatsapp-web.js";
 
-export const Name : string = ""
-export const Command : string = ""
-export const Description : string = ""
-export const AdminOnly : boolean = true
-
-export async function deleteGroupProfilePicture(wwclient : Client, message : Message) : Promise<void | boolean>{
-    const chat : Chat = await message.getChat()
+async function deleteGroupProfilePicture(wwclient: Client, message: Message): Promise<void | boolean>{
+    const chat: Chat = await message.getChat();
 
     if (!chat.isGroup) {
-        return
+        return;
     }
 
-    //@ts-ignore
-    const deletion : boolean = await chat.deletePicture()
+    //@ts-ignore deletePicture uses GroupChat object instead of Chat object.
+    const deletion : boolean = await chat.deletePicture();
     
     if (deletion) {
-        return await message.react("✅")
+        return await message.react("✅");
     }
 
-    return await message.react("❌")
+    return await message.react("❌");
+}
+
+export default {
+    deleteGroupProfilePicture,
+    name: "",
+    command: "",
+    description: "",
+    /**
+     * the other two
+     */
 }

@@ -1,15 +1,23 @@
 import { Chat, Message } from "whatsapp-web.js";
 
-export const Name : string = ""
-export const Command : string = ""
-export const Description : string = ""
-export const AdminOnly : boolean = true
+async function getInviteCode(message: Message): Promise<Message | void> { 
 
-async function getInviteCode(message : Message) : Promise<Message> {
-    let chat : Chat = await message.getChat()
-    //@ts-ignore
-    let code = await chat.getInviteCode()
-    return message.reply(`Invite Code ${code}`)
+    let chat: Chat = await message.getChat();
+
+    if (!chat.isGroup) return;
+
+    //@ts-ignore getInviteCode functions on GroupChat object
+    let code = await chat.getInviteCode();
+
+    return message.reply(`Invite Code ${code}`);
 }
 
-export default getInviteCode
+export default {
+    getInviteCode, 
+    name: "",
+    command: "",
+    description: "",
+    /**
+     * You know the drill
+     */
+}

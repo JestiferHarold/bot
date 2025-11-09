@@ -1,28 +1,31 @@
 import { Chat, Client, Contact, Message } from "whatsapp-web.js";
 
-export const Name : string = ""
-export const Command : string = ""
-export const Description : string = ""
-export const AdminOnly : boolean = true
-
 export async function groupName(wwclient : Client, message : Message) : Promise<boolean | void> {
 
-    const split : Array<string> = message.body.split(" ")
+    const split : Array<string> = message.body.split(" ");
 
     if (split.length < 2) {
-        return
+        return;
     }
 
-    //delete line 12 :: no idea why I wrote this
-    const contact : Contact = await message.getContact()
-    const chat : Chat = await message.getChat()
+    const chat : Chat = await message.getChat();
 
-    //@ts-ignore
-    const description : boolean = await chat.setSubject(split.slice(1).join(" "))
+    //@ts-ignore function belongs to GroupChat not Chat, but works
+    const description : boolean = await chat.setSubject(split.slice(1).join(" "));
 
     if (description) {
-        return await message.react("✅")
+        return await message.react("✅");
     }
     
-    return await message.react("❌")
+    return await message.react("❌");
+}
+
+export default {
+    groupName,
+    name: "",
+    command: "",
+    description: "",
+    /**
+     * the remaining here
+     */
 }

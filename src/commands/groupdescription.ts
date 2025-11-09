@@ -1,29 +1,31 @@
 import { Chat, Client, Contact, Message } from "whatsapp-web.js";
 
-export const Name : string = ""
-export const Command : string = ""
-export const Description : string = ""
-export const AdminOnly : boolean = true
+async function groupDescription(wwclient: Client, message: Message): Promise<boolean | void> {
 
-export async function groupDescription(wwclient : Client, message : Message) : Promise<boolean | void> {
-
-    const split : Array<string> = message.body.split(" ")
+    const split: Array<string> = message.body.split(" ");
 
     if (split.length < 2) {
-        return
+        return;
     }
 
-    //delete line 12 
-    const contact : Contact = await message.getContact()
-    const chat : Chat = await message.getChat()
+    const chat: Chat = await message.getChat();
+
+    if (!chat.isGroup) return;
 
     //@ts-ignore
-    const description : boolean = await chat.setDescription(split.slice(1))
+    const description: boolean = await chat.setDescription(split.slice(1))
 
     if (description) {
-        return await message.react("✅")
+        return await message.react("✅");
     }
 
-    return await message.react("❌")
+    return await message.react("❌");
+}
 
+export default {
+    groupDescription,
+    name: "",
+    command: "",
+    description: "",
+    adminOnly: true
 }

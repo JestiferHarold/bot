@@ -1,24 +1,23 @@
 import { Message } from "whatsapp-web.js";
 
-export const Name : string = ""
-export const Command : string = ""
-export const Description : string = ""
-export const AdminOnly : boolean = true
-
-async function timesForwarded(message : Message) : Promise<void> {
+async function timesForwarded(message: Message): Promise<void> {
     
     if (!message.hasQuotedMsg) {
-        return
+        return;
     }
 
-    let targetMessage : Message = await message.getQuotedMessage()
+    let targetMessage : Message = await message.getQuotedMessage();
 
     if (targetMessage.isForwarded) {
-        let times = targetMessage.forwardingScore
-        message.reply(`The Message has been forwarded ${times} ${times == 1 ? "time" : "times"}`)
+        let times = targetMessage.forwardingScore;
+        await message.reply(`The Message has been forwarded ${times} ${times == 1 ? "time" : "times"}`)
     }
-
-    return
 } 
 
-export default timesForwarded
+export default {
+    timesForwarded,
+    name: "",
+    command: "",
+    description: "",
+    adminOnly: false
+}

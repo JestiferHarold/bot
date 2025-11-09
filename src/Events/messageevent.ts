@@ -49,7 +49,7 @@ import { getRepositoryData } from "../CodeTabs/repositorylines";
 import { CAAS } from "../Animals/cats/catasaservice";
 import { askOllama, chooseModel } from "../Ai/ollama";
 import { availableModels, mistralTextGeneration, modelSelector } from "../Ai/mistral";
-import { geminiChat, immediateChat, restartGemini } from "../Ai/gemini";
+import Gemini from "../Ai/gemini";
 import { memoryGame } from "../games/timerecord/tr";
 import { RestartClient } from "./startup";
 import { hangman } from "../games/hangman/hangman";
@@ -98,14 +98,14 @@ export const MessageEvent = async (message: Message ) => {
             await getDeletedMessage(message, deletedMessage)
             break
         case "~ic":
-            await immediateChat(wwclient, message)
+            await Gemini.immediateChat(wwclient, message)
             break
         case "~jes":
             if (message.body.toLowerCase().split(" ").includes("-r") || message.body.toLowerCase().split(" ").includes("--restart")) {
-                await restartGemini(message)
+                await Gemini.restartGemini(message)
                 break
             }
-            await geminiChat(wwclient, message)
+            await Gemini.geminiChat(wwclient, message)
             break
         case "~mist":
             if (message.body.split(" ")[1].toLowerCase() == "-m" || message.body.split(" ")[1].toLowerCase() == "--models") {

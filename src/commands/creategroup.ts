@@ -1,5 +1,6 @@
 import { Chat, Client, Contact, ContactId, CreateGroupResult, GroupParticipant, Message } from "whatsapp-web.js";
 
+//No idea what to do, 9 - 11 - 2025
 
 export async function createGroupChat(wwclient : Client, message : Message) : Promise<Message | void | Chat>{
     let participants : Array<Contact> | Array<GroupParticipant> | Array<ContactId> | Array<string>= await message.getMentions()
