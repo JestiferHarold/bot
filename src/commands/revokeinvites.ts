@@ -6,20 +6,26 @@ export const Description : string = ""
 export const AdminOnly : boolean = true
 
 async function revokeGroupInvites(wwclient : Client, message : Message) : Promise<void | boolean>{
-    let chat : Chat = await message.getChat()
+    let chat : Chat = await message.getChat();
 
     if (!chat.isGroup) {
-        return
+        return;
     }
 
-    //@ts-ignore
+    //@ts-ignore chat does not snippet function, but does exists
     if (await chat.revokeInvite()) {
-        wwclient.sendMessage(message.from, "Invite links revoked")
-        return true
+        wwclient.sendMessage(message.from, "Invite links revoked");
+        return true;
     }
 
-    return false
+    return false;
 
 }
 
-export default revokeGroupInvites
+export default {
+    revokeGroupInvites,
+    name: "",
+    command: "",
+    description: ""
+    //rest
+}

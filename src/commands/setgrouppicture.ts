@@ -1,46 +1,48 @@
 import { Chat, Client, Message, MessageMedia } from "whatsapp-web.js";
 
-export const Name : string = ""
-export const Command : string = ""
-export const Description : string = ""
-export const AdminOnly : boolean = true
-
-export async function setGroupPicture(wwclient : Client, message : Message) : Promise<boolean | void>{
-    const chat : Chat = await message.getChat()
+async function setGroupPicture(message: Message) : Promise<boolean | void>{
+    const chat: Chat = await message.getChat();
 
     if (!chat.isGroup) {
-        return
+        return;
     }
 
-    let target : string | Array< {link : string, isSuspicious : boolean} > | MessageMedia
-    let quotedMessage : Message
+    let target: string | Array< {link: string, isSuspicious: boolean} > | MessageMedia;
+    let quotedMessage : Message;
 
     if(!message.hasMedia) {
         if (message.hasQuotedMsg){
-            quotedMessage = await message.getQuotedMessage()
+            quotedMessage = await message.getQuotedMessage();
             if (!quotedMessage.hasMedia) {
-                return 
+                return;
             } else {
-                target = await quotedMessage.downloadMedia()
+                target = await quotedMessage.downloadMedia();
             }
         } else {
             if (message.links.length == 0) {
-                return 
+                return;
             } else {
-                target = message.links[0].link
-                target = await MessageMedia.fromUrl(target)
+                target = message.links[0].link;
+                target = await MessageMedia.fromUrl(target);
             }
         }
     } else {
-        target = await message.downloadMedia()
+        target = await message.downloadMedia();
     }
 
     //@ts-ignore
-    const updateProfile : boolean = chat.setPicture(target)
+    const updateProfile: boolean = chat.setPicture(target);
 
     if (updateProfile) {
-        return await message.react("✅")
+        return await message.react("✅");
     }
 
-    return await message.react("❌")
+    return await message.react("❌");
+}
+
+export default {
+    setGroupPicture,
+    name: "",
+    command: "",
+    description: ""
 }

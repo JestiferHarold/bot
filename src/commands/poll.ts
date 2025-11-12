@@ -1,25 +1,20 @@
 import { Client, Message, Poll } from "whatsapp-web.js";
 
-export const Name : string = ""
-export const Command : string = ""
-export const Description : string = ""
-export const AdminOnly : boolean = true
-
-async function createPoll(wwclient : Client, message : Message) : Promise<void | Message> {
-    let body : string = message.body.slice(3)
-    let pollArray : Array<string> = body.split("")
+async function createPoll(wwclient: Client, message: Message): Promise<void | Message> {
+    let body: string = message.body.slice(3);
+    let pollArray: Array<string> = body.split("");
     
     if (pollArray.length < 3) {
-        return
+        return;
     }
 
-    let allowMultipleAnswers : boolean = false
+    let allowMultipleAnswers: boolean = false;
 
     if (pollArray.slice(-1)[0] == "-") {
-        allowMultipleAnswers = pollArray.slice(-1)[0] == "t" ? true : false
+        allowMultipleAnswers = pollArray.slice(-1)[0] == "t" ? true : false;
     }
 
-    let poll : Poll = new Poll(
+    let poll: Poll = new Poll(
         pollArray[0],
         pollArray.slice(1),
         {
@@ -33,9 +28,14 @@ async function createPoll(wwclient : Client, message : Message) : Promise<void |
                 }
             )
         }
-    )
+    );
 
-    return wwclient.sendMessage(message.from, poll)
+    return wwclient.sendMessage(message.from, poll);
 }
 
-export default createPoll
+export default {
+    createPoll, 
+    name: "",
+    command: "",
+    description: ""
+}

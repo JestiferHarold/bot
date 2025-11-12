@@ -1,14 +1,16 @@
 import { Chat, Message } from "whatsapp-web.js";
 
-export const Name : string = ""
-export const Command : string = ""
-export const Description : string = ""
-export const AdminOnly : boolean = true
+//try completeing return
+async function muteChat(message: Message){
+    let chat: Chat = await message.getChat();
 
-async function muteChat(message : Message){
-    let chat : Chat = await message.getChat()
-
-    return chat.mute()
+    return chat.mute();
 }
 
-export default muteChat
+export default {
+    muteChat,
+    name: "",
+    command: "",
+    description: "",
+    /**do the remaining */
+}

@@ -1,6 +1,8 @@
 import { TextToSpeechClient } from "@google-cloud/text-to-speech";
 import { Client, Message, MessageMedia } from "whatsapp-web.js";
 
+//Does not work
+
 const client = new TextToSpeechClient(
     {
         apiKey: process.env.GEMINI_API_KEY

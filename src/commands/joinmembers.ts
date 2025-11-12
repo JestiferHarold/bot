@@ -8,7 +8,7 @@ async function changeMessageSettings(wwclient : Client, message : Message, boole
     const settings : boolean = await chat.setAddMembersAdminsOnly(booleanValue);
 
     if (settings) {
-        return await wwclient.sendMessage(message.from, booleanValue ? "Settings changed to admins only" : "Settings changed to all");
+        return await wwclient.sendMessage(message.from, booleanValue ? "Changed to allow only admins to change the group settings" : "changed to allow all to change group settings");
     }
 
     return await wwclient.sendMessage(message.from, "not enough permissions");

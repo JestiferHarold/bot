@@ -1,29 +1,24 @@
 import { Chat, Client, Contact, Message, MessageMedia } from "whatsapp-web.js";
 
-export const Name : string = ""
-export const Command : string = ""
-export const Description : string = ""
-export const AdminOnly : boolean = true
-
-async function sticker(wwclient : Client, message : Message) : Promise<void | Message>{
-    let chat : Chat = await message.getChat()
-    let contact : Contact = await message.getContact()
-    let target : Message
+async function sticker(wwclient: Client, message: Message): Promise<void | Message>{
+    let chat: Chat = await message.getChat();
+    let contact: Contact = await message.getContact();
+    let target: Message;
 
     if (!message.hasMedia) {
         if (message.hasQuotedMsg) {
-            target = await message.getQuotedMessage()
+            target = await message.getQuotedMessage();
             if (!target.hasMedia) {
-                return
+                return;
             }
         } else {
-            return
+            return;
         }
     } else {
-        target = message
+        target = message;
     }
 
-    let media : MessageMedia = await target.downloadMedia()
+    let media: MessageMedia = await target.downloadMedia();
 
     return await message.reply(
         new MessageMedia(media.mimetype, media.data),
@@ -33,7 +28,12 @@ async function sticker(wwclient : Client, message : Message) : Promise<void | Me
             sendMediaAsSticker: true,
             stickerAuthor : "whatsapp sticker maker"
         }
-    )
+    );
 }
 
-export default sticker
+export default {
+    sticker,
+    name: "",
+    command: "",
+    description: ""
+}
